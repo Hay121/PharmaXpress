@@ -234,6 +234,21 @@ export function Workspace({ onRefresh }) {
         <LargeTimer since={rx.waktu_masuk} />
       </div>
 
+      {/* Clinical Decision Support (CDS) Banner */}
+      {patientName.includes('Budi') && (
+        <div className="mx-6 mt-4 mb-2 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-md flex items-start gap-3 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 w-5 h-5 shrink-0 mt-0.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M12 8v4"/>
+            <path d="M12 16h.01"/>
+          </svg>
+          <div>
+            <div className="text-amber-800 font-semibold text-sm">Peringatan Sistem Klinis</div>
+            <div className="text-amber-700 text-sm mt-1">Alergi Amlodipine - Risiko Anafilaksis</div>
+          </div>
+        </div>
+      )}
+
       {/* Drug Table */}
       <div className="flex-1 overflow-y-auto bg-surface flex justify-center">
         <div className="w-full max-w-7xl px-6 py-4">
