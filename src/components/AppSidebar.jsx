@@ -39,7 +39,7 @@ export function AppSidebar() {
   ];
 
   return (
-    <aside className="w-[260px] bg-white border-r border-slate-200 h-screen flex flex-col shrink-0 overflow-y-auto">
+    <aside className="w-[240px] bg-white border-r border-slate-200 h-screen flex flex-col shrink-0 overflow-y-auto">
       {/* Brand Header */}
       <div className="h-[56px] border-b border-slate-200 flex items-center px-6 shrink-0 bg-slate-50">
         <div className="flex items-center gap-3 font-bold text-lg text-slate-900 tracking-tight">

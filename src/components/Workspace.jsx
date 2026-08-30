@@ -252,16 +252,16 @@ export function Workspace({ onRefresh }) {
       {/* Drug Table */}
       <div className="flex-1 overflow-y-auto bg-surface flex justify-center">
         <div className="w-full max-w-7xl px-6 py-4">
-          <table className="drug-table">
-            <thead>
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-slate-50 border-y border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">
               <tr>
-                <th style={{ width: '36px' }}>#</th>
-                <th>Nama Obat</th>
-                <th>Dosis / Aturan Pakai</th>
-                <th style={{ width: '70px', textAlign: 'right', paddingRight: '12px' }}>Qty</th>
-                <th style={{ width: '80px', textAlign: 'right', paddingRight: '12px' }}>Stok</th>
-                <th style={{ width: '120px' }}>Status</th>
-                <th style={{ width: '70px', textAlign: 'center' }}>Rak</th>
+                <th className="py-4 px-6 w-[40px]">#</th>
+                <th className="py-4 px-6">Nama Obat</th>
+                <th className="py-4 px-6">Dosis / Aturan Pakai</th>
+                <th className="py-4 px-6 text-right w-[80px]">Qty</th>
+                <th className="py-4 px-6 text-right w-[90px]">Stok</th>
+                <th className="py-4 px-6 w-[140px]">Status</th>
+                <th className="py-4 px-6 text-center w-[80px]">Rak</th>
               </tr>
             </thead>
           <tbody>
@@ -279,9 +279,9 @@ export function Workspace({ onRefresh }) {
 
               return (
                 <React.Fragment key={item.id}>
-                  <tr className={`${rowClass} cursor-pointer transition-colors duration-200 ease-fluid hover:bg-slate-50`} onClick={() => setFocusedItemIdx(idx)}>
-                    <td className="font-mono text-slate-500 tabular-nums">{idx + 1}</td>
-                    <td>
+                  <tr className={`${rowClass} cursor-pointer transition-colors duration-200 ease-fluid hover:bg-slate-50 border-b border-slate-100`} onClick={() => setFocusedItemIdx(idx)}>
+                    <td className="py-4 px-6 font-mono text-slate-500 tabular-nums">{idx + 1}</td>
+                    <td className="py-4 px-6 whitespace-nowrap">
                       <div className="drug-name text-slate-900">
                         {sub ? sub.nama_dagang : item.nama_dagang} {sub ? sub.kekuatan_dosis : item.kekuatan_dosis}
                         {sub && <span style={{ fontSize: '11px', color: 'var(--info)', marginLeft: 8 }} className="inline-flex items-center gap-1"><ArrowPathIcon className="w-3 h-3 text-current"/> Substitusi</span>}
@@ -290,10 +290,10 @@ export function Workspace({ onRefresh }) {
                         {sub ? `Pengganti: ${item.nama_dagang} ${item.kekuatan_dosis}` : (item.nama_generik || '')}
                       </div>
                     </td>
-                    <td className="drug-dosis text-slate-600 font-medium">{item.dosis_instruksi || '-'}</td>
-                    <td className="drug-qty text-slate-800 tabular-nums text-lg font-semibold">{item.quantity_prescribed}</td>
-                    <td className="drug-stock text-slate-600 tabular-nums">{sub ? sub.stok_saat_ini : item.stok_saat_ini}</td>
-                    <td>
+                    <td className="py-4 px-6 text-slate-600 font-medium whitespace-nowrap">{item.dosis_instruksi || '-'}</td>
+                    <td className="py-4 px-6 text-slate-800 tabular-nums text-lg font-semibold text-right whitespace-nowrap">{item.quantity_prescribed}</td>
+                    <td className="py-4 px-6 text-slate-600 tabular-nums text-right whitespace-nowrap">{sub ? sub.stok_saat_ini : item.stok_saat_ini}</td>
+                    <td className="py-4 px-6 whitespace-nowrap">
                       {stockStatus === 'OK' && <span className="stock-badge --ok inline-flex items-center gap-1"><CheckCircleSolidIcon className="w-3.5 h-3.5 text-current"/> OK</span>}
                       {stockStatus === 'LOW' && <span className="stock-badge --low inline-flex items-center gap-1"><ExclamationTriangleSolidIcon className="w-3.5 h-3.5 text-current"/> Stok Rendah</span>}
                       {(stockStatus === 'OUT_OF_STOCK' || stockStatus === 'INSUFFICIENT') && (
@@ -308,7 +308,7 @@ export function Workspace({ onRefresh }) {
                       )}
                       {sub && <span className="stock-badge --substituted inline-flex items-center gap-1"><ArrowPathIcon className="w-3.5 h-3.5 text-current"/> Disubstitusi</span>}
                     </td>
-                    <td className="font-mono text-sm text-slate-500 text-center tabular-nums">{item.lokasi_rak || '-'}</td>
+                    <td className="py-4 px-6 font-mono text-sm text-slate-500 text-center tabular-nums whitespace-nowrap">{item.lokasi_rak || '-'}</td>
                   </tr>
 
                   {/* Inline Substitution Panel */}
@@ -380,14 +380,23 @@ export function Workspace({ onRefresh }) {
 
         <div className="flex flex-col gap-3 min-w-[280px]">
           {rx.status !== 'COMPLETED' ? (
-            <button 
-              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-base shadow-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-primary/20 disabled:opacity-50" 
-              onClick={handleApprove} 
-              disabled={!currentUser}
-            >
-              <span className="inline-flex items-center gap-1.5"><CheckCircleIcon className="w-5 h-5 text-current"/> Approve & Dispense </span>
-              <kbd className="ml-2 bg-black/10 border-black/20 text-white/90 shadow-none px-1.5 py-0.5 text-xs rounded">Alt+A</kbd>
-            </button>
+            currentUser?.role === 'APOTEKER' ? (
+              <button 
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-base shadow-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-primary/20 disabled:opacity-50" 
+                onClick={handleApprove} 
+                disabled={!currentUser}
+              >
+                <span className="inline-flex items-center gap-1.5"><CheckCircleIcon className="w-5 h-5 text-current"/> Approve & Dispense </span>
+                <kbd className="ml-2 bg-black/10 border-black/20 text-white/90 shadow-none px-1.5 py-0.5 text-xs rounded">Alt+A</kbd>
+              </button>
+            ) : (
+              <button 
+                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-100 text-slate-400 rounded-xl font-bold text-base shadow-none cursor-not-allowed" 
+                disabled={true}
+              >
+                <span className="inline-flex items-center gap-1.5"><CheckCircleIcon className="w-5 h-5 text-current"/> Hanya Akses Apoteker </span>
+              </button>
+            )
           ) : null}
           <button 
             className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 rounded-xl font-semibold text-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-red-100" 

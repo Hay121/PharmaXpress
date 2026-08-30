@@ -20,6 +20,9 @@ import { useLiveSimulation } from './hooks/useLiveSimulation.js';
 // New MPA Components
 import { AppSidebar } from './components/AppSidebar.jsx';
 import { AuditEdPage } from './pages/AuditEdPage.jsx';
+import { DashboardPage } from './pages/DashboardPage.jsx';
+import { MasterObatPage } from './pages/MasterObatPage.jsx';
+import { LaporanPage } from './pages/LaporanPage.jsx';
 import { PlaceholderPage } from './pages/PlaceholderPage.jsx';
 
 export default function App() {
@@ -190,11 +193,11 @@ export default function App() {
               <Route path="/audit-ed" element={<AuditEdPage />} />
 
               {/* MILESTONE 4: Premium WIP States */}
-              <Route path="/dashboard" element={<PlaceholderPage title="Dashboard Sistem" />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/riwayat" element={<PlaceholderPage title="Riwayat Penyerahan" />} />
-              <Route path="/master-obat" element={<PlaceholderPage title="Master Inventori Obat" />} />
+              <Route path="/master-obat" element={<MasterObatPage />} />
               <Route path="/surat-permintaan" element={<PlaceholderPage title="Surat Permintaan (SP)" />} />
-              <Route path="/laporan" element={<PlaceholderPage title="Laporan & KPI Klinis" />} />
+              <Route path="/laporan" element={<LaporanPage />} />
               <Route path="/pengaturan" element={<PlaceholderPage title="Pengaturan & RBAC" />} />
               
             </Routes>
