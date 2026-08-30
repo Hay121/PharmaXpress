@@ -6,13 +6,21 @@ export function LaporanPage() {
   const [jenisLaporan, setJenisLaporan] = useState('Laporan Dispensing Harian');
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const exportToCSV = (filename, data) => {
+    const csv = data.map(row => Object.values(row).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    toast.success('Berhasil diunduh!');
+  };
+
   const handleGenerate = () => {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      toast.success('✅ Berkas PDF berhasil diunduh', {
-        description: `Laporan: ${jenisLaporan}`
-      });
+      exportToCSV(`laporan-${jenisLaporan.replace(/ /g, '-').toLowerCase()}.csv`, dummyLaporan);
     }, 1500);
   };
 
@@ -80,16 +88,15 @@ export function LaporanPage() {
         </div>
 
         {/* Data Grid Preview */}
-        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden relative z-0">
+        <div className="w-full overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm relative z-0">
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
             <span className="text-sm font-bold text-slate-700">Preview: {jenisLaporan}</span>
             <button className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-teal-700">
               <Filter className="w-3.5 h-3.5" /> Opsi Tabel
             </button>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 border-b border-slate-200">
+          <table className="min-w-full table-auto divide-y divide-slate-200">
+            <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Tanggal</th>
                   <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Nomor Resep</th>
@@ -115,8 +122,7 @@ export function LaporanPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
-          </div>
+          </table>
         </div>
 
       </div>

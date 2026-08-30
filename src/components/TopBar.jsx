@@ -54,10 +54,6 @@ function LiveShiftIndicator() {
 export function TopBar() {
   const currentUser = useStore(s => s.currentUser);
   const setCurrentUser = useStore(s => s.setCurrentUser);
-  const stats = useStore(s => s.stats);
-  const setSearchOpen = useStore(s => s.setSearchOpen);
-  const setNewRxFormOpen = useStore(s => s.setNewRxFormOpen);
-  const pendingCount = (stats.pending || 0) + (stats.in_progress || 0);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -87,34 +83,20 @@ export function TopBar() {
     .toUpperCase();
 
   return (
-    <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10 sticky top-0">
+    <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-50 sticky top-0">
       
-      {/* Left: Actions */}
-      <div className="flex items-center gap-4 w-1/3">
-        {currentUser?.role === 'DOKTER' ? (
-          <button className="btn btn--primary !py-2 !px-4 !text-sm flex items-center gap-2 shadow-sm" onClick={() => setNewRxFormOpen(true)}>
-            <PlusIcon className="w-5 h-5" />
-            Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
-          </button>
-        ) : (
-          <button className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 text-slate-400 rounded-md text-sm font-semibold focus:outline-none" disabled={true} title="Hanya Akses Dokter">
-            <PlusIcon className="w-5 h-5" />
-            Resep Baru
-          </button>
-        )}
-      </div>
-
-      {/* Center: Search */}
-      <div className="flex-1 max-w-md w-full mx-4 flex justify-center">
-        <button className="flex items-center gap-2 w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
-          <MagnifyingGlassIcon className="w-4 h-4" />
-          <span className="truncate">Cari obat (nama, kode)...</span>
-          <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
-        </button>
+      {/* Left: Brand Context */}
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 bg-teal-500 rounded-lg shadow-sm flex items-center justify-center">
+          <span className="text-white font-bold text-lg leading-none">+</span>
+        </div>
+        <div className="text-lg font-bold text-slate-900 tracking-tight">
+          SIMRS Xpress
+        </div>
       </div>
 
       {/* Right: Shift & Profile */}
-      <div className="flex items-center justify-end gap-4 w-1/3">
+      <div className="flex items-center gap-6 whitespace-nowrap flex-shrink-0">
         
         {/* Live Shift & Clock Indicator */}
         <LiveShiftIndicator />
@@ -127,14 +109,14 @@ export function TopBar() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-3 text-sm text-slate-700 font-medium p-1 pr-2 rounded-xl hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
-            <div className="text-right hidden md:block">
+            <div className="text-right hidden md:block whitespace-nowrap flex-shrink-0 min-w-max">
               <div className="text-sm font-bold text-slate-900 leading-tight">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
               <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{currentUser?.role || 'Apoteker'}</div>
             </div>
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white shrink-0">
               {getInitials(currentUser?.nama_lengkap)}
             </div>
-            <ChevronDownIcon className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+            <ChevronDownIcon className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Panel */}
@@ -142,13 +124,13 @@ export function TopBar() {
             className={`absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/50 ring-1 ring-slate-900/5 py-1.5 transition-all duration-150 origin-top-right z-50
               ${dropdownOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
           >
-            <div className="px-4 py-2 border-b border-slate-100/80 mb-1">
-              <div className="text-sm font-semibold text-slate-900">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
-              <div className="text-xs text-slate-500">{currentUser?.role || 'Apoteker'}</div>
+            <div className="px-4 py-2 border-b border-slate-100/80 mb-1 whitespace-nowrap">
+              <div className="text-sm font-semibold text-slate-900 truncate">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
+              <div className="text-xs text-slate-500 truncate">{currentUser?.role || 'Apoteker'}</div>
             </div>
             
             <button className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-              <Cog8ToothIcon className="w-4 h-4" />
+              <Cog8ToothIcon className="w-4 h-4 shrink-0" />
               Pengaturan Akun
             </button>
             
@@ -158,7 +140,7 @@ export function TopBar() {
               onClick={handleLogout}
               className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors group"
             >
-              <ArrowRightOnRectangleIcon className="w-4 h-4 group-hover:text-red-600 transition-colors" />
+              <ArrowRightOnRectangleIcon className="w-4 h-4 shrink-0 group-hover:text-red-600 transition-colors" />
               Keluar Sistem
             </button>
           </div>

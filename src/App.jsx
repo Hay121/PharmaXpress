@@ -25,6 +25,8 @@ import { MasterObatPage } from './pages/MasterObatPage.jsx';
 import { LaporanPage } from './pages/LaporanPage.jsx';
 import { SuratPermintaanPage } from './pages/SuratPermintaanPage.jsx';
 import { PengaturanPage } from './pages/PengaturanPage.jsx';
+import { RiwayatPage } from './pages/RiwayatPage.jsx';
+import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
@@ -184,9 +186,29 @@ export default function App() {
               
               {/* MILESTONE 2: The Core Routing Preservation */}
               <Route path="/antrean" element={
-                <div className="flex-1 flex overflow-hidden w-full h-full">
-                  <Sidebar />
-                  <Workspace onRefresh={loadData} />
+                <div className="flex-1 flex flex-col overflow-hidden w-full h-full">
+                  {/* Secondary Action Bar */}
+                  <div className="h-14 bg-slate-50 border-b flex items-center justify-between px-6 shrink-0">
+                    <div className="w-96 relative">
+                      <button className="flex items-center gap-2 w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-50 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
+                        <MagnifyingGlassIcon className="w-4 h-4 shrink-0" />
+                        <span className="truncate">Cari antrean (nama pasien, no resep)...</span>
+                        <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
+                      </button>
+                    </div>
+                    <div>
+                      {currentUser?.role === 'DOKTER' ? (
+                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-teal-700 rounded-lg text-sm font-semibold shadow-sm transition-colors" onClick={() => setNewRxFormOpen(true)}>
+                          <PlusIcon className="w-4 h-4 shrink-0" />
+                          Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
+                        </button>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="flex-1 flex overflow-hidden w-full h-full">
+                    <Sidebar />
+                    <Workspace onRefresh={loadData} />
+                  </div>
                 </div>
               } />
 
@@ -195,7 +217,7 @@ export default function App() {
 
               {/* MILESTONE 4: Premium WIP States (Now Fully Functional) */}
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/riwayat" element={<DashboardPage />} /> {/* Route to dashboard for now */}
+              <Route path="/riwayat" element={<RiwayatPage />} />
               <Route path="/master-obat" element={<MasterObatPage />} />
               <Route path="/surat-permintaan" element={<SuratPermintaanPage />} />
               <Route path="/laporan" element={<LaporanPage />} />

@@ -5,14 +5,7 @@ import { toast } from 'sonner';
 export function MasterObatPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeAction, setActiveAction] = useState(null);
-
-  const handleAction = (action, msg) => {
-    setActiveAction(action);
-    setTimeout(() => {
-      setActiveAction(null);
-      toast.success(msg);
-    }, 1500);
-  };
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const dummyDrugs = [
     { id: 'OBT-0001', nama: 'Amoxicillin Trihydrate 500mg', kategori: 'Antibiotik', stok: 450, satuan: 'Kapsul', harga: 850, status: 'Aman' },
@@ -22,6 +15,31 @@ export function MasterObatPage() {
     { id: 'OBT-0005', nama: 'Metformin HCl 500mg', kategori: 'Antidiabetes', stok: 310, satuan: 'Tablet', harga: 300, status: 'Aman' },
     { id: 'OBT-0006', nama: 'Simvastatin 10mg', kategori: 'Antikolesterol', stok: 55, satuan: 'Tablet', harga: 600, status: 'Menipis' },
   ];
+
+  const exportToCSV = (filename, data) => {
+    const csv = data.map(row => Object.values(row).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    toast.success('Berhasil diunduh!');
+  };
+
+  const handleAction = (action, msg) => {
+    setActiveAction(action);
+    setTimeout(() => {
+      setActiveAction(null);
+      if (action === 'ekspor') {
+        exportToCSV('master-obat.csv', dummyDrugs);
+      } else if (action === 'tambah') {
+        setShowAddModal(true);
+      } else {
+        toast.success(msg);
+      }
+    }, 500);
+  };
+
 
   return (
     <div className="flex-1 p-8 bg-slate-50 overflow-y-auto">
@@ -76,10 +94,9 @@ export function MasterObatPage() {
         </div>
 
         {/* Pixel-Perfect Table */}
-        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 border-b border-slate-200">
+        <div className="w-full overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+          <table className="min-w-full table-auto divide-y divide-slate-200">
+            <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Kode</th>
                   <th className="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Nama Obat / Generik</th>
@@ -108,8 +125,47 @@ export function MasterObatPage() {
                 ))}
               </tbody>
             </table>
-          </div>
         </div>
+
+        {/* Tambah Obat Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <h2 className="text-lg font-bold text-slate-900">Tambah Obat Baru</h2>
+                <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">✕</button>
+              </div>
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Nama Obat</label>
+                  <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Masukkan nama..." />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
+                  <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                    <option>Antibiotik</option>
+                    <option>Analgesik</option>
+                    <option>Vitamin</option>
+                  </select>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">Stok Awal</label>
+                    <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" defaultValue={0} />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">Satuan</label>
+                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Box/Tablet" />
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+                <button onClick={() => setShowAddModal(false)} className="px-4 py-2 font-semibold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors">Batal</button>
+                <button onClick={() => { setShowAddModal(false); toast.success('Obat berhasil ditambahkan (Mock)'); }} className="px-4 py-2 font-semibold text-white bg-primary hover:bg-teal-700 rounded-lg shadow-sm transition-colors">Simpan Obat</button>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

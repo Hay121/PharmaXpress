@@ -76,16 +76,16 @@ export function DashboardPage() {
             <div className="flex-1 flex items-end gap-2 h-64 mt-auto">
               {/* Fake bars */}
               {[40, 60, 85, 100, 70, 50, 30, 45, 90, 65, 40, 20].map((val, i) => (
-                <div key={i} className="flex-1 flex flex-col justify-end group">
+                <div key={i} className="flex-1 flex flex-col justify-end group h-full items-center">
                   <div 
-                    className="w-full bg-teal-100 group-hover:bg-teal-500 rounded-t-md transition-all duration-300 relative" 
+                    className="w-full max-w-[48px] bg-teal-500 hover:bg-teal-600 rounded-t-md transition-all duration-300 relative" 
                     style={{ height: `${val}%` }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                       {val}
                     </div>
                   </div>
-                  <div className="text-[10px] text-slate-400 font-mono text-center mt-2">{String(i+7).padStart(2, '0')}:00</div>
+                  <div className="text-[10px] text-slate-400 font-mono text-center mt-2 w-full">{String(i+7).padStart(2, '0')}:00</div>
                 </div>
               ))}
             </div>

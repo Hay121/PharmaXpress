@@ -381,14 +381,23 @@ export function Workspace({ onRefresh }) {
         <div className="flex flex-col gap-3 min-w-[280px]">
           {rx.status !== 'COMPLETED' ? (
             currentUser?.role === 'APOTEKER' ? (
-              <button 
-                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-base shadow-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-primary/20 disabled:opacity-50" 
-                onClick={handleApprove} 
-                disabled={!currentUser}
-              >
-                <span className="inline-flex items-center gap-1.5"><CheckCircleIcon className="w-5 h-5 text-current"/> Approve & Dispense </span>
-                <kbd className="ml-2 bg-black/10 border-black/20 text-white/90 shadow-none px-1.5 py-0.5 text-xs rounded">Alt+A</kbd>
-              </button>
+              <>
+                <button 
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-base shadow-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-primary/20 disabled:opacity-50" 
+                  onClick={handleApprove} 
+                  disabled={!currentUser}
+                >
+                  <span className="inline-flex items-center gap-1.5"><CheckCircleIcon className="w-5 h-5 text-current"/> Approve & Dispense </span>
+                  <kbd className="ml-2 bg-black/10 border-black/20 text-white/90 shadow-none px-1.5 py-0.5 text-xs rounded">Alt+A</kbd>
+                </button>
+                <button 
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 rounded-xl font-semibold text-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-red-100" 
+                  onClick={handleReturn}
+                >
+                  <span className="inline-flex items-center gap-1.5"><ArrowUturnLeftIcon className="w-4 h-4 text-current"/> Kembalikan </span>
+                  <kbd className="ml-2 font-sans text-[11px] px-1.5 py-0.5 bg-red-100 rounded font-medium">Alt+R</kbd>
+                </button>
+              </>
             ) : (
               <button 
                 className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-slate-100 text-slate-400 rounded-xl font-bold text-base shadow-none cursor-not-allowed" 
@@ -398,13 +407,6 @@ export function Workspace({ onRefresh }) {
               </button>
             )
           ) : null}
-          <button 
-            className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-red-50 text-red-600 border border-red-200 hover:border-red-300 rounded-xl font-semibold text-sm transition-all duration-200 ease-fluid active:scale-[0.98] focus:ring-4 focus:ring-red-100" 
-            onClick={handleReturn}
-          >
-            <span className="inline-flex items-center gap-1.5"><ArrowUturnLeftIcon className="w-4 h-4 text-current"/> Kembalikan </span>
-            <kbd className="ml-2 font-sans text-[11px] px-1.5 py-0.5 bg-red-100 rounded font-medium">Alt+R</kbd>
-          </button>
         </div>
       </div>
       )}
