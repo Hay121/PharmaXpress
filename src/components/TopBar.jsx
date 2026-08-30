@@ -1,16 +1,35 @@
 // ═══════════════════════════════════════════
 // TopBar — Global navigation bar
 // ═══════════════════════════════════════════
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store.js';
-import { MagnifyingGlassIcon, ClipboardDocumentListIcon, PlusIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, ClipboardDocumentListIcon, PlusIcon, ClockIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, Cog8ToothIcon } from '@heroicons/react/24/outline';
 
 export function TopBar() {
   const currentUser = useStore(s => s.currentUser);
+  const setCurrentUser = useStore(s => s.setCurrentUser);
   const stats = useStore(s => s.stats);
   const setSearchOpen = useStore(s => s.setSearchOpen);
   const setNewRxFormOpen = useStore(s => s.setNewRxFormOpen);
   const pendingCount = (stats.pending || 0) + (stats.in_progress || 0);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    setDropdownOpen(false);
+    setCurrentUser(null);
+  };
 
   const getShiftLabel = () => {
     const h = new Date().getHours();
@@ -63,11 +82,44 @@ export function TopBar() {
         Shift {getShiftLabel()}
       </div>
 
-      <div className="flex items-center gap-3 text-sm text-slate-700 font-medium border-l border-slate-200 pl-4">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white">
-          {initials}
+      {/* User Profile Dropdown */}
+      <div className="relative border-l border-slate-200 pl-4" ref={dropdownRef}>
+        <button 
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="flex items-center gap-3 text-sm text-slate-700 font-medium p-1.5 pr-2 rounded-xl hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
+        >
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white">
+            {initials}
+          </div>
+          <span>{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</span>
+          <ChevronDownIcon className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
+        </button>
+
+        {/* Dropdown Panel */}
+        <div 
+          className={`absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/50 ring-1 ring-slate-900/5 py-1.5 transition-all duration-150 origin-top-right z-50
+            ${dropdownOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
+        >
+          <div className="px-4 py-2 border-b border-slate-100/80 mb-1">
+            <div className="text-sm font-semibold text-slate-900">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
+            <div className="text-xs text-slate-500">{currentUser?.role || 'Apoteker'}</div>
+          </div>
+          
+          <button className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+            <Cog8ToothIcon className="w-4 h-4" />
+            Pengaturan Akun
+          </button>
+          
+          <div className="h-px bg-slate-100 my-1" />
+          
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors group"
+          >
+            <ArrowRightOnRectangleIcon className="w-4 h-4 group-hover:text-red-600 transition-colors" />
+            Keluar Sistem
+          </button>
         </div>
-        <span>{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</span>
       </div>
     </header>
   );
