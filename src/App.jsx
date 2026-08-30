@@ -75,16 +75,24 @@ export default function App() {
         e.preventDefault();
         setNewRxFormOpen(true);
       }
-      // Escape — close modals
+      // Escape — close modals (priority chain)
       if (e.key === 'Escape') {
-        if (searchOpen) setSearchOpen(false);
-        else if (newRxFormOpen) setNewRxFormOpen(false);
+        if (confirmDialog) {
+          e.preventDefault();
+          useStore.getState().setConfirmDialog(null);
+        } else if (searchOpen) {
+          e.preventDefault();
+          setSearchOpen(false);
+        } else if (newRxFormOpen) {
+          e.preventDefault();
+          setNewRxFormOpen(false);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentUser, searchOpen, newRxFormOpen]);
+  }, [currentUser, searchOpen, newRxFormOpen, confirmDialog]);
 
   // WebSocket for real-time updates
   useEffect(() => {

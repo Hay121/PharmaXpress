@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // SearchModal — Global fuzzy search (Ctrl+K)
 // ═══════════════════════════════════════════
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import Fuse from 'fuse.js';
 import { useStore } from '../store.js';
 
@@ -11,6 +11,7 @@ export function SearchModal() {
   const [query, setQuery] = useState('');
   const [focusIdx, setFocusIdx] = useState(0);
   const inputRef = useRef(null);
+  const resultsRef = useRef(null);
 
   const fuse = useMemo(() => new Fuse(inventory, {
     keys: ['nama_dagang', 'nama_generik', 'zat_aktif', 'kode_obat', 'kode_bpjs'],
@@ -38,12 +39,29 @@ export function SearchModal() {
       setSearchOpen(false);
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setFocusIdx(Math.min(focusIdx + 1, results.length - 1));
+      setFocusIdx(prev => {
+        const next = Math.min(prev + 1, results.length - 1);
+        scrollToItem(next);
+        return next;
+      });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setFocusIdx(Math.max(focusIdx - 1, 0));
+      setFocusIdx(prev => {
+        const next = Math.max(prev - 1, 0);
+        scrollToItem(next);
+        return next;
+      });
     }
   };
+
+  const scrollToItem = useCallback((idx) => {
+    const container = resultsRef.current;
+    if (!container) return;
+    const items = container.querySelectorAll('.search-result');
+    if (items[idx]) {
+      items[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, []);
 
   const stockColor = (stok) => {
     if (stok <= 0) return '--out';
@@ -70,7 +88,7 @@ export function SearchModal() {
           </kbd>
         </div>
 
-        <div className="search-modal__results">
+        <div className="search-modal__results" ref={resultsRef}>
           {results.length === 0 ? (
             <div className="search-modal__empty">
               Tidak ada hasil untuk "{query}"
