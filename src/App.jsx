@@ -14,6 +14,7 @@ import { NewRxForm } from './components/NewRxForm.jsx';
 import { ConfirmDialog } from './components/ConfirmDialog.jsx';
 import { Toaster } from 'sonner';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
+import { useLiveSimulation } from './hooks/useLiveSimulation.js';
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
   const searchOpen = useStore(s => s.searchOpen);
@@ -27,6 +28,9 @@ export default function App() {
   const addPrescription = useStore(s => s.addPrescription);
   const selectedRxId = useStore(s => s.selectedRxId);
   const setSelectedRxDetail = useStore(s => s.setSelectedRxDetail);
+
+  // Initialize Live Simulation Engine
+  useLiveSimulation();
 
   // Load initial data after login
   useEffect(() => {
@@ -55,6 +59,14 @@ export default function App() {
       setSelectedRxDetail(null);
       return;
     }
+    
+    // Bypassing API for LIVE SIMULATED prescriptions
+    const localRx = useStore.getState().prescriptions.find(p => p.id === selectedRxId);
+    if (localRx && localRx.is_simulated) {
+      setSelectedRxDetail(localRx);
+      return;
+    }
+
     api.getPrescription(selectedRxId).then(res => {
       setSelectedRxDetail(res.data);
     }).catch(console.error);
