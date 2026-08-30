@@ -2,7 +2,6 @@
 // SearchModal — Global fuzzy search (Ctrl+K)
 // ═══════════════════════════════════════════
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import Fuse from 'fuse.js';
 import { useStore } from '../store.js';
 
 export function SearchModal() {
@@ -13,17 +12,17 @@ export function SearchModal() {
   const inputRef = useRef(null);
   const resultsRef = useRef(null);
 
-  const fuse = useMemo(() => new Fuse(inventory, {
-    keys: ['nama_dagang', 'nama_generik', 'zat_aktif', 'kode_obat', 'kode_bpjs'],
-    threshold: 0.35,
-    distance: 100,
-    includeScore: true,
-  }), [inventory]);
-
   const results = useMemo(() => {
     if (!query.trim()) return inventory.slice(0, 15);
-    return fuse.search(query).slice(0, 20).map(r => r.item);
-  }, [query, fuse, inventory]);
+    const lowerQ = query.toLowerCase();
+    return inventory.filter(d => 
+      (d.nama_dagang && d.nama_dagang.toLowerCase().includes(lowerQ)) ||
+      (d.nama_generik && d.nama_generik.toLowerCase().includes(lowerQ)) ||
+      (d.kode_obat && d.kode_obat.toLowerCase().includes(lowerQ)) ||
+      (d.kode_bpjs && d.kode_bpjs.toLowerCase().includes(lowerQ)) ||
+      (d.zat_aktif && d.zat_aktif.toLowerCase().includes(lowerQ))
+    ).slice(0, 20);
+  }, [query, inventory]);
 
   useEffect(() => {
     inputRef.current?.focus();

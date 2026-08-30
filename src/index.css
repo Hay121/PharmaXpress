@@ -124,8 +124,8 @@ body {
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: var(--radius-full); }
-::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
 /* ── Focus ── */
 :focus-visible {
@@ -971,7 +971,7 @@ body {
 }
 
 .search-result:hover, .search-result.--focused {
-  background: var(--bg-surface-hover);
+  background: var(--accent-blue-muted);
 }
 
 .search-result__info {

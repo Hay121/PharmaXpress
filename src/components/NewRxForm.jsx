@@ -2,7 +2,6 @@
 // NewRxForm — New Prescription Form (Ctrl+N)
 // ═══════════════════════════════════════════
 import React, { useState, useEffect, useMemo } from 'react';
-import Fuse from 'fuse.js';
 import { useStore } from '../store.js';
 import { api } from '../api.js';
 import { CustomSelect } from './CustomSelect.jsx';
@@ -27,15 +26,16 @@ export function NewRxForm({ onCreated }) {
   const [submitting, setSubmitting] = useState(false);
   const [patientSearch, setPatientSearch] = useState('');
 
-  const fuse = useMemo(() => new Fuse(inventory, {
-    keys: ['nama_dagang', 'nama_generik', 'kode_obat'],
-    threshold: 0.35,
-  }), [inventory]);
-
   const drugResults = useMemo(() => {
     if (!drugSearch.trim()) return [];
-    return fuse.search(drugSearch).slice(0, 8).map(r => r.item);
-  }, [drugSearch, fuse]);
+    const query = drugSearch.toLowerCase();
+    return inventory.filter(d => 
+      (d.nama_dagang && d.nama_dagang.toLowerCase().includes(query)) ||
+      (d.nama_generik && d.nama_generik.toLowerCase().includes(query)) ||
+      (d.kode_obat && d.kode_obat.toLowerCase().includes(query)) ||
+      (d.kode_bpjs && d.kode_bpjs.toLowerCase().includes(query))
+    ).slice(0, 8);
+  }, [drugSearch, inventory]);
 
   useEffect(() => {
     api.getPatients('').then(r => setPatients(r.data)).catch(() => {});
@@ -212,7 +212,7 @@ export function NewRxForm({ onCreated }) {
                 <input
                   className="form-input"
                   type="text"
-                  placeholder="Cari obat..."
+                  placeholder="Cari obat (nama, generik, kode)..."
                   value={drugSearch}
                   onChange={e => setDrugSearch(e.target.value)}
                 />
