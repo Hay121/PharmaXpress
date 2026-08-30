@@ -105,7 +105,7 @@ export function TopBar() {
 
       <button className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-md text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus-within:ring-2 focus-within:ring-teal-500 min-w-[240px]" onClick={() => setSearchOpen(true)}>
         <MagnifyingGlassIcon className="w-4 h-4" />
-        Cari obat, pasien...
+        Cari obat (nama, kode)...
         <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400">Ctrl+K</kbd>
       </button>
 
