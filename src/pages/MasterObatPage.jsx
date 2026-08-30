@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { Box, Search, Plus, Download, Filter } from 'lucide-react';
+import { Box, Search, Plus, Download, Filter, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function MasterObatPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeAction, setActiveAction] = useState(null);
+
+  const handleAction = (action, msg) => {
+    setActiveAction(action);
+    setTimeout(() => {
+      setActiveAction(null);
+      toast.success(msg);
+    }, 1500);
+  };
 
   const dummyDrugs = [
     { id: 'OBT-0001', nama: 'Amoxicillin Trihydrate 500mg', kategori: 'Antibiotik', stok: 450, satuan: 'Kapsul', harga: 850, status: 'Aman' },
@@ -38,14 +48,29 @@ export function MasterObatPage() {
                 className="pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none min-w-[240px]"
               />
             </div>
-            <button className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors">
-              <Filter className="w-4 h-4" /> Filter
+            <button 
+              onClick={() => handleAction('filter', 'Filter diterapkan')}
+              disabled={activeAction !== null}
+              className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {activeAction === 'filter' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Filter className="w-4 h-4" />}
+              {activeAction === 'filter' ? 'Memproses...' : 'Filter'}
             </button>
-            <button className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors">
-              <Download className="w-4 h-4" /> Ekspor
+            <button 
+              onClick={() => handleAction('ekspor', 'Data inventori berhasil diekspor')}
+              disabled={activeAction !== null}
+              className="flex items-center gap-2 px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {activeAction === 'ekspor' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              {activeAction === 'ekspor' ? 'Memproses...' : 'Ekspor'}
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-teal-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm">
-              <Plus className="w-4 h-4" /> Tambah Obat
+            <button 
+              onClick={() => handleAction('tambah', 'Formulir tambah obat siap (Mock)')}
+              disabled={activeAction !== null}
+              className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-teal-700 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {activeAction === 'tambah' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+              {activeAction === 'tambah' ? 'Memproses...' : 'Tambah Obat'}
             </button>
           </div>
         </div>

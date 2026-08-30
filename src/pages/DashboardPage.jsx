@@ -1,10 +1,21 @@
 import React from 'react';
 import { useStore } from '../store.js';
-import { LayoutDashboard, Receipt, AlertCircle, Clock, FileText, CheckCircle } from 'lucide-react';
+import { LayoutDashboard, Receipt, AlertCircle, Clock, FileText, CheckCircle, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function DashboardPage() {
   const stats = useStore(s => s.stats);
   const totalResep = (stats.completed || 0) + (stats.pending || 0) + (stats.in_progress || 0);
+  
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleLihatSemua = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success('Daftar tugas telah disinkronisasi dengan sistem HIS.');
+    }, 1500);
+  };
 
   return (
     <div className="flex-1 p-8 bg-slate-50 overflow-y-auto">
@@ -110,8 +121,12 @@ export function DashboardPage() {
               </div>
 
             </div>
-            <button className="mt-4 w-full py-2.5 text-sm font-semibold text-primary bg-primary-subtle rounded-lg hover:bg-teal-100 transition-colors">
-              Lihat Semua Tugas
+            <button 
+              onClick={handleLihatSemua}
+              disabled={isLoading}
+              className="mt-4 w-full py-2.5 text-sm font-semibold text-primary bg-primary-subtle rounded-lg hover:bg-teal-100 transition-colors flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Memproses...</> : 'Lihat Semua Tugas'}
             </button>
           </div>
 

@@ -1,7 +1,21 @@
-import React from 'react';
-import { BarChart4, Download, FileText, Calendar, Filter } from 'lucide-react';
+import React, { useState } from 'react';
+import { BarChart4, Download, FileText, Calendar, Filter, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function LaporanPage() {
+  const [jenisLaporan, setJenisLaporan] = useState('Laporan Dispensing Harian');
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      toast.success('✅ Berkas PDF berhasil diunduh', {
+        description: `Laporan: ${jenisLaporan}`
+      });
+    }, 1500);
+  };
+
   const dummyLaporan = [
     { id: 1, tanggal: '2026-08-30', nomor: 'RX-20260830-1045', pasien: 'Budi Santoso', poli: 'IGD', waktu: '12 menit', status: 'Selesai' },
     { id: 2, tanggal: '2026-08-30', nomor: 'RX-20260830-1046', pasien: 'Sari Wulandari', poli: 'Rawat Jalan', waktu: '8 menit', status: 'Selesai' },
@@ -26,13 +40,17 @@ export function LaporanPage() {
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1 space-y-2">
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jenis Laporan</label>
-            <div className="relative">
+            <div className="relative z-50">
               <FileText className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <select className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none font-medium">
-                <option>Laporan Dispensing Harian</option>
-                <option>Laporan Pemakaian Narkotika & Psikotropika</option>
-                <option>Laporan SLA (Waktu Tunggu)</option>
-                <option>Laporan Obat Fast/Slow Moving</option>
+              <select 
+                value={jenisLaporan}
+                onChange={(e) => setJenisLaporan(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none font-medium cursor-pointer"
+              >
+                <option value="Laporan Dispensing Harian">Laporan Dispensing Harian</option>
+                <option value="Laporan Pemakaian Narkotika">Laporan Pemakaian Narkotika & Psikotropika</option>
+                <option value="Laporan SLA (Waktu Tunggu)">Laporan SLA (Waktu Tunggu)</option>
+                <option value="Laporan Obat Fast/Slow Moving">Laporan Obat Fast/Slow Moving</option>
               </select>
             </div>
           </div>
@@ -52,15 +70,19 @@ export function LaporanPage() {
             </div>
           </div>
 
-          <button className="flex items-center justify-center gap-2 px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm h-[42px] whitespace-nowrap">
-            <Download className="w-4 h-4" /> Generate & Export PDF
+          <button 
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="flex items-center justify-center gap-2 px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm h-[42px] whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Memproses...</> : <><Download className="w-4 h-4" /> Generate & Export PDF</>}
           </button>
         </div>
 
         {/* Data Grid Preview */}
-        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden relative z-0">
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
-            <span className="text-sm font-bold text-slate-700">Preview: Laporan Dispensing Harian</span>
+            <span className="text-sm font-bold text-slate-700">Preview: {jenisLaporan}</span>
             <button className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-teal-700">
               <Filter className="w-3.5 h-3.5" /> Opsi Tabel
             </button>

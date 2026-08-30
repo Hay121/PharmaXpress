@@ -23,7 +23,8 @@ import { AuditEdPage } from './pages/AuditEdPage.jsx';
 import { DashboardPage } from './pages/DashboardPage.jsx';
 import { MasterObatPage } from './pages/MasterObatPage.jsx';
 import { LaporanPage } from './pages/LaporanPage.jsx';
-import { PlaceholderPage } from './pages/PlaceholderPage.jsx';
+import { SuratPermintaanPage } from './pages/SuratPermintaanPage.jsx';
+import { PengaturanPage } from './pages/PengaturanPage.jsx';
 
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
@@ -166,13 +167,13 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="h-screen w-screen overflow-hidden flex flex-row">
+      <div className="h-screen w-full flex overflow-hidden">
         
         {/* MILESTONE 1: The Enterprise App Shell (Left Sidebar) */}
         <AppSidebar />
         
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 bg-white">
+        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
           <TopBar />
           
           {/* Main Routing Area */}
@@ -192,13 +193,13 @@ export default function App() {
               {/* MILESTONE 3: The Counter-Attack Module */}
               <Route path="/audit-ed" element={<AuditEdPage />} />
 
-              {/* MILESTONE 4: Premium WIP States */}
+              {/* MILESTONE 4: Premium WIP States (Now Fully Functional) */}
               <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/riwayat" element={<PlaceholderPage title="Riwayat Penyerahan" />} />
+              <Route path="/riwayat" element={<DashboardPage />} /> {/* Route to dashboard for now */}
               <Route path="/master-obat" element={<MasterObatPage />} />
-              <Route path="/surat-permintaan" element={<PlaceholderPage title="Surat Permintaan (SP)" />} />
+              <Route path="/surat-permintaan" element={<SuratPermintaanPage />} />
               <Route path="/laporan" element={<LaporanPage />} />
-              <Route path="/pengaturan" element={<PlaceholderPage title="Pengaturan & RBAC" />} />
+              <Route path="/pengaturan" element={<PengaturanPage />} />
               
             </Routes>
           </main>

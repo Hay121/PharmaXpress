@@ -75,7 +75,7 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-[320px] bg-canvas border-r border-slate-200 flex flex-col shrink-0 overflow-hidden">
+    <aside className="w-[340px] bg-white border-r border-slate-200 flex flex-col shrink-0 overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-surface">
         <span className="text-sm font-semibold text-slate-700 tracking-wide uppercase">Antrean Resep</span>
         <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">{prescriptions.length} total</span>

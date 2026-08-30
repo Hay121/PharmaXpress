@@ -41,7 +41,7 @@ function LiveShiftIndicator() {
   return (
     <div className="px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 flex items-center gap-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-300">
       <ClockIcon className="w-4 h-4 text-slate-500 shrink-0" />
-      <div className="flex items-center gap-1.5 whitespace-nowrap">
+      <div className="flex items-center gap-1.5 whitespace-nowrap hidden sm:flex">
         <span>{dateStr},</span>
         <span className="tabular-nums font-mono text-slate-700 font-semibold">{timeStr}</span>
         <span className="text-slate-300">•</span>
@@ -77,7 +77,7 @@ export function TopBar() {
     setCurrentUser(null);
   };
 
-  const initials = (currentUser?.nama_lengkap || '')
+  const getInitials = (name) => (name || '')
     .replace('[SYNTHETIC] ', '')
     .split(' ')
     .filter(w => !w.startsWith('Apt') && !w.startsWith('dr'))
@@ -87,73 +87,81 @@ export function TopBar() {
     .toUpperCase();
 
   return (
-    <header className="h-[56px] bg-surface border-b border-slate-200 shadow-sm flex items-center px-6 gap-6 shrink-0 z-50 sticky top-0">
-
-      <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-semibold border transition-colors ${pendingCount > 15 ? 'bg-red-50 text-red-600 border-red-200' : 'bg-primary-subtle text-primary border-primary/20'}`}>
-        <ClipboardDocumentListIcon className="w-4 h-4" />
-        Antrean: {pendingCount} resep
+    <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-10 sticky top-0">
+      
+      {/* Left: Actions */}
+      <div className="flex items-center gap-4 w-1/3">
+        {currentUser?.role === 'DOKTER' ? (
+          <button className="btn btn--primary !py-2 !px-4 !text-sm flex items-center gap-2 shadow-sm" onClick={() => setNewRxFormOpen(true)}>
+            <PlusIcon className="w-5 h-5" />
+            Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
+          </button>
+        ) : (
+          <button className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 text-slate-400 rounded-md text-sm font-semibold focus:outline-none" disabled={true} title="Hanya Akses Dokter">
+            <PlusIcon className="w-5 h-5" />
+            Resep Baru
+          </button>
+        )}
       </div>
 
-      <button className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-md text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus-within:ring-2 focus-within:ring-teal-500 flex-1 max-w-lg" onClick={() => setSearchOpen(true)}>
-        <MagnifyingGlassIcon className="w-4 h-4" />
-        Cari obat (nama, kode)...
-        <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400">Ctrl+K</kbd>
-      </button>
-
-      {currentUser?.role === 'DOKTER' ? (
-        <button className="btn btn--primary !py-1.5 !px-3 !text-xs flex items-center gap-1.5 shadow-sm" onClick={() => setNewRxFormOpen(true)}>
-          <PlusIcon className="w-4 h-4" />
-          Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
+      {/* Center: Search */}
+      <div className="flex-1 max-w-md w-full mx-4 flex justify-center">
+        <button className="flex items-center gap-2 w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
+          <MagnifyingGlassIcon className="w-4 h-4" />
+          <span className="truncate">Cari obat (nama, kode)...</span>
+          <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
         </button>
-      ) : (
-        <button className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 text-slate-400 rounded-md text-xs font-semibold focus:outline-none" disabled={true} title="Hanya Akses Dokter">
-          <PlusIcon className="w-4 h-4" />
-          Resep Baru
-        </button>
-      )}
+      </div>
 
-      <div className="flex-1" />
+      {/* Right: Shift & Profile */}
+      <div className="flex items-center justify-end gap-4 w-1/3">
+        
+        {/* Live Shift & Clock Indicator */}
+        <LiveShiftIndicator />
 
-      {/* Live Shift & Clock Indicator */}
-      <LiveShiftIndicator />
+        <div className="w-[1px] h-6 bg-slate-200 shrink-0 hidden sm:block" />
 
-      {/* User Profile Dropdown */}
-      <div className="relative border-l border-slate-200 pl-4" ref={dropdownRef}>
-        <button 
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-3 text-sm text-slate-700 font-medium p-1.5 pr-2 rounded-xl hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
-        >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white">
-            {initials}
-          </div>
-          <span>{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</span>
-          <ChevronDownIcon className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-        </button>
-
-        {/* Dropdown Panel */}
-        <div 
-          className={`absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/50 ring-1 ring-slate-900/5 py-1.5 transition-all duration-150 origin-top-right z-50
-            ${dropdownOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
-        >
-          <div className="px-4 py-2 border-b border-slate-100/80 mb-1">
-            <div className="text-sm font-semibold text-slate-900">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
-            <div className="text-xs text-slate-500">{currentUser?.role || 'Apoteker'}</div>
-          </div>
-          
-          <button className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
-            <Cog8ToothIcon className="w-4 h-4" />
-            Pengaturan Akun
-          </button>
-          
-          <div className="h-px bg-slate-100 my-1" />
-          
+        {/* User Profile Dropdown */}
+        <div className="relative" ref={dropdownRef}>
           <button 
-            onClick={handleLogout}
-            className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors group"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center gap-3 text-sm text-slate-700 font-medium p-1 pr-2 rounded-xl hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
           >
-            <ArrowRightOnRectangleIcon className="w-4 h-4 group-hover:text-red-600 transition-colors" />
-            Keluar Sistem
+            <div className="text-right hidden md:block">
+              <div className="text-sm font-bold text-slate-900 leading-tight">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
+              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{currentUser?.role || 'Apoteker'}</div>
+            </div>
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center font-bold text-xs text-white shadow-sm ring-2 ring-white">
+              {getInitials(currentUser?.nama_lengkap)}
+            </div>
+            <ChevronDownIcon className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
           </button>
+
+          {/* Dropdown Panel */}
+          <div 
+            className={`absolute right-0 top-full mt-2 w-56 bg-white/95 backdrop-blur-md rounded-xl shadow-xl shadow-slate-200/50 ring-1 ring-slate-900/5 py-1.5 transition-all duration-150 origin-top-right z-50
+              ${dropdownOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}
+          >
+            <div className="px-4 py-2 border-b border-slate-100/80 mb-1">
+              <div className="text-sm font-semibold text-slate-900">{(currentUser?.nama_lengkap || '').replace('[SYNTHETIC] ', '')}</div>
+              <div className="text-xs text-slate-500">{currentUser?.role || 'Apoteker'}</div>
+            </div>
+            
+            <button className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+              <Cog8ToothIcon className="w-4 h-4" />
+              Pengaturan Akun
+            </button>
+            
+            <div className="h-px bg-slate-100 my-1" />
+            
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors group"
+            >
+              <ArrowRightOnRectangleIcon className="w-4 h-4 group-hover:text-red-600 transition-colors" />
+              Keluar Sistem
+            </button>
+          </div>
         </div>
       </div>
     </header>
