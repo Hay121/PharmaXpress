@@ -1,12 +1,13 @@
 // ═══════════════════════════════════════════
-// PharmaXpress — Main App
+// PharmaXpress — Main App Shell
 // ═══════════════════════════════════════════
 import React, { useEffect, useCallback, useRef } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useStore } from './store.js';
 import { api } from './api.js';
 import { LoginPage } from './components/LoginPage.jsx';
 import { TopBar } from './components/TopBar.jsx';
-import { Sidebar } from './components/Sidebar.jsx';
+import { Sidebar } from './components/Sidebar.jsx'; // This is the Queue Sidebar
 import { Workspace } from './components/Workspace.jsx';
 import { BottomBar } from './components/BottomBar.jsx';
 import { SearchModal } from './components/SearchModal.jsx';
@@ -15,6 +16,12 @@ import { ConfirmDialog } from './components/ConfirmDialog.jsx';
 import { Toaster } from 'sonner';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid';
 import { useLiveSimulation } from './hooks/useLiveSimulation.js';
+
+// New MPA Components
+import { AppSidebar } from './components/AppSidebar.jsx';
+import { AuditEdPage } from './pages/AuditEdPage.jsx';
+import { PlaceholderPage } from './pages/PlaceholderPage.jsx';
+
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
   const searchOpen = useStore(s => s.searchOpen);
@@ -120,7 +127,6 @@ export default function App() {
         try {
           const msg = JSON.parse(event.data);
           if (msg.event === 'prescription:new') {
-            // Reload the queue
             loadData();
           } else if (msg.event === 'prescription:dispensed' || msg.event === 'prescription:returned') {
             loadData();
@@ -156,34 +162,68 @@ export default function App() {
   }
 
   return (
-    <div className="app-layout">
-      <TopBar />
-      <div className="main-content">
-        <Sidebar />
-        <Workspace onRefresh={loadData} />
-      </div>
-      <BottomBar />
+    <BrowserRouter>
+      <div className="h-screen w-screen overflow-hidden flex flex-row">
+        
+        {/* MILESTONE 1: The Enterprise App Shell (Left Sidebar) */}
+        <AppSidebar />
+        
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 bg-white">
+          <TopBar />
+          
+          {/* Main Routing Area */}
+          <main className="flex-1 flex flex-col overflow-hidden relative">
+            <Routes>
+              {/* Default Redirect to Antrean */}
+              <Route path="/" element={<Navigate to="/antrean" replace />} />
+              
+              {/* MILESTONE 2: The Core Routing Preservation */}
+              <Route path="/antrean" element={
+                <div className="flex-1 flex overflow-hidden w-full h-full">
+                  <Sidebar />
+                  <Workspace onRefresh={loadData} />
+                </div>
+              } />
 
-      {searchOpen && <SearchModal />}
-      {newRxFormOpen && <NewRxForm onCreated={loadData} />}
-      {confirmDialog && <ConfirmDialog />}
-      <Toaster 
-        position="bottom-right" 
-        offset={40}
-        toastOptions={{
-          className: '!bg-white !border !border-slate-200 !shadow-[0_12px_40px_-10px_rgba(0,0,0,0.12)] !rounded-xl !p-4 !items-start',
-          classNames: {
-            title: '!text-sm !font-semibold !text-slate-900',
-            description: '!text-sm !text-slate-500 !font-medium',
-            icon: '!mt-0.5',
-            content: '!flex-1 !gap-0.5'
-          }
-        }}
-        icons={{
-          success: <CheckCircleIcon className="w-5 h-5 text-emerald-500" />,
-          error: <XCircleIcon className="w-5 h-5 text-red-500" />,
-        }}
-      />
-    </div>
+              {/* MILESTONE 3: The Counter-Attack Module */}
+              <Route path="/audit-ed" element={<AuditEdPage />} />
+
+              {/* MILESTONE 4: Premium WIP States */}
+              <Route path="/dashboard" element={<PlaceholderPage title="Dashboard Sistem" />} />
+              <Route path="/riwayat" element={<PlaceholderPage title="Riwayat Penyerahan" />} />
+              <Route path="/master-obat" element={<PlaceholderPage title="Master Inventori Obat" />} />
+              <Route path="/surat-permintaan" element={<PlaceholderPage title="Surat Permintaan (SP)" />} />
+              <Route path="/laporan" element={<PlaceholderPage title="Laporan & KPI Klinis" />} />
+              <Route path="/pengaturan" element={<PlaceholderPage title="Pengaturan & RBAC" />} />
+              
+            </Routes>
+          </main>
+          
+        </div>
+
+        {/* Global Overlays & Modals */}
+        {searchOpen && <SearchModal />}
+        {newRxFormOpen && <NewRxForm onCreated={loadData} />}
+        {confirmDialog && <ConfirmDialog />}
+        <Toaster 
+          position="bottom-right" 
+          offset={40}
+          toastOptions={{
+            className: '!bg-white !border !border-slate-200 !shadow-[0_12px_40px_-10px_rgba(0,0,0,0.12)] !rounded-xl !p-4 !items-start',
+            classNames: {
+              title: '!text-sm !font-semibold !text-slate-900',
+              description: '!text-sm !text-slate-500 !font-medium',
+              icon: '!mt-0.5',
+              content: '!flex-1 !gap-0.5'
+            }
+          }}
+          icons={{
+            success: <CheckCircleIcon className="w-5 h-5 text-emerald-500" />,
+            error: <XCircleIcon className="w-5 h-5 text-red-500" />,
+          }}
+        />
+      </div>
+    </BrowserRouter>
   );
 }
