@@ -4,9 +4,21 @@
 import { create } from 'zustand';
 
 export const useStore = create((set, get) => ({
-  // Auth
-  currentUser: null,
-  setCurrentUser: (user) => set({ currentUser: user }),
+  // Auth — restored from sessionStorage on init
+  currentUser: (() => {
+    try {
+      const saved = sessionStorage.getItem('pharmaxpress_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch { return null; }
+  })(),
+  setCurrentUser: (user) => {
+    if (user) {
+      sessionStorage.setItem('pharmaxpress_user', JSON.stringify(user));
+    } else {
+      sessionStorage.removeItem('pharmaxpress_user');
+    }
+    set({ currentUser: user });
+  },
 
   // Prescriptions queue
   prescriptions: [],
