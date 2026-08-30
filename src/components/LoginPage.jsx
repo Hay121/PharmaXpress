@@ -53,128 +53,102 @@ export function LoginPage() {
   }));
 
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-slate-50 overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative bg-[url('/bghospital.jpg')] bg-cover bg-center overflow-hidden">
       
-      {/* LEFT COLUMN (Brand / Cover) */}
-      <div className="relative hidden md:flex flex-col justify-between p-12 bg-slate-900 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2000&auto=format&fit=crop')" }}>
-        <div className="absolute inset-0 bg-slate-900/60 bg-gradient-to-t from-slate-900/90 to-transparent mix-blend-multiply"></div>
+      {/* Dark Overlay for Cinematic Contrast */}
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-brightness-75"></div>
+
+      {/* Glassmorphism Auth Card */}
+      <div className="z-10 relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/50 border border-white/20 w-full max-w-md p-8 mx-4">
         
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-lg">
-            <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
-              <path d="M8 16h6l2-6 4 12 2-6h6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <div className="text-xl font-bold text-white tracking-tight">PharmaXpress</div>
+        {/* Official Hospital Logo */}
+        <img 
+          src="/logo-rs.png" 
+          alt="Logo RS Indriati" 
+          className="h-16 w-auto object-contain mx-auto mb-6 drop-shadow-sm" 
+        />
+        
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Otentikasi Sistem</h2>
+          <p className="text-sm text-slate-500">Silakan masuk untuk mengakses sistem Farmasi.</p>
         </div>
 
-        <div className="relative z-10 max-w-lg mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-4 tracking-tight">
-            Membangun Masa Depan Layanan Farmasi
-          </h1>
-          <p className="text-slate-300 text-lg leading-relaxed">
-            Sistem cerdas berkecepatan tinggi yang dirancang khusus untuk meminimalisir antrean dan memaksimalkan keselamatan pasien di RS Indriati Boyolali.
-          </p>
-        </div>
-      </div>
-
-      {/* RIGHT COLUMN (Auth Form) */}
-      <div className="relative flex flex-col justify-center items-center p-8 bg-white shadow-[-10px_0_30px_rgba(0,0,0,0.03)] z-10">
-        
-        {/* Subtle background glow for aesthetics */}
-        <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-primary/5 rounded-full filter blur-[100px] pointer-events-none"></div>
-
-        <div className="w-full max-w-sm relative z-10">
+        <div className={`space-y-5 transition-transform duration-200 ${loginError ? 'animate-shake' : ''}`}>
           
-          <div className="mb-10 text-center md:text-left">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Selamat Datang Kembali</h2>
-            <p className="text-sm text-slate-500">Silakan otentikasi identitas Anda untuk mengakses sistem antrean.</p>
-          </div>
-
-          <div className={`space-y-5 transition-transform duration-200 ${loginError ? 'animate-shake' : ''}`}>
-            
-            {/* User Select */}
-            <div className="w-full">
-              {loading ? (
-                <div className="text-sm text-slate-500 font-medium animate-pulse h-[42px] flex items-center bg-slate-50 rounded-lg px-4 border border-slate-200">
-                  Memuat data pengguna...
-                </div>
-              ) : (
-                <CustomSelect
-                  label="Identitas Pengguna"
-                  value={selectedUser}
-                  onChange={(val) => { setSelectedUser(val); setLoginError(false); }}
-                  options={userOptions}
-                  placeholder="Pilih pengguna..."
-                />
-              )}
-            </div>
-
-            {/* Password Field */}
-            <div className="w-full">
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Kata Sandi</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Masukkan kata sandi (admin123)"
-                  value={password}
-                  onChange={(e) => { setPassword(e.target.value); setLoginError(false); }}
-                  onKeyDown={handleKeyDown}
-                  className={`w-full bg-white border ${loginError ? 'border-red-400 ring-4 ring-red-500/10' : 'border-slate-300 focus:border-primary focus:ring-4 focus:ring-primary/10'} rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all`}
-                />
-                <button
-                  type="button"
-                  tabIndex={-1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors p-1"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeSlashIcon className="w-4 h-4" />
-                  ) : (
-                    <EyeIcon className="w-4 h-4" />
-                  )}
-                </button>
+          {/* User Select */}
+          <div className="w-full">
+            {loading ? (
+              <div className="text-sm text-slate-500 font-medium animate-pulse h-[42px] flex items-center bg-slate-50 rounded-lg px-4 border border-slate-200">
+                Memuat data pengguna...
               </div>
-              
-              {/* Dynamic Error Message */}
-              {loginError && (
-                <div className="mt-2 text-sm text-red-600 flex items-center gap-1.5 font-medium animate-in fade-in slide-in-from-top-1">
-                  <ExclamationTriangleIcon className="w-4 h-4" />
-                  Kata sandi tidak valid. Silakan coba lagi.
-                </div>
-              )}
+            ) : (
+              <CustomSelect
+                label="Identitas Pengguna"
+                value={selectedUser}
+                onChange={(val) => { setSelectedUser(val); setLoginError(false); }}
+                options={userOptions}
+                placeholder="Pilih pengguna..."
+              />
+            )}
+          </div>
+
+          {/* Password Field */}
+          <div className="w-full">
+            <label className="block text-sm font-semibold text-slate-700 mb-1.5">Kata Sandi</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Masukkan kata sandi (admin123)"
+                value={password}
+                onChange={(e) => { setPassword(e.target.value); setLoginError(false); }}
+                onKeyDown={handleKeyDown}
+                className={`w-full bg-white border ${loginError ? 'border-red-400 ring-4 ring-red-500/10' : 'border-slate-300 focus:border-primary focus:ring-4 focus:ring-primary/10'} rounded-lg px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 outline-none transition-all`}
+              />
+              <button
+                type="button"
+                tabIndex={-1}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors p-1"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="w-4 h-4" />
+                ) : (
+                  <EyeIcon className="w-4 h-4" />
+                )}
+              </button>
             </div>
-
-          </div>
-
-          <div className="mt-8">
-            <button 
-              className="w-full relative overflow-hidden bg-primary text-white font-bold py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(15,118,110,0.25),inset_0_1px_0_rgba(255,255,255,0.15)] border border-primary/20 hover:bg-primary-hover active:scale-[0.98] transition-all duration-200 ease-fluid disabled:opacity-70 disabled:cursor-not-allowed group flex items-center justify-center gap-2"
-              onClick={handleLogin} 
-              disabled={!selectedUser || loading || isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Memverifikasi...
-                </>
-              ) : (
-                <span className="relative z-10 drop-shadow-sm">Masuk ke Sistem</span>
-              )}
-            </button>
-          </div>
-
-          <div className="mt-10 text-[11px] tracking-widest text-center text-amber-700 bg-amber-50 px-4 py-3 rounded-xl font-bold border border-amber-200/50 flex items-center justify-center gap-2 uppercase">
-            <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            Mode Demo (Gunakan: admin123)
+            
+            {/* Dynamic Error Message */}
+            {loginError && (
+              <div className="mt-2 text-sm text-red-600 flex items-center gap-1.5 font-medium animate-in fade-in slide-in-from-top-1">
+                <ExclamationTriangleIcon className="w-4 h-4" />
+                Kata sandi tidak valid. Silakan coba lagi.
+              </div>
+            )}
           </div>
 
         </div>
+
+        <div className="mt-8">
+          <button 
+            className="w-full relative overflow-hidden bg-primary text-white font-bold py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(15,118,110,0.25),inset_0_1px_0_rgba(255,255,255,0.15)] border border-primary/20 hover:bg-primary-hover active:scale-[0.98] transition-all duration-200 ease-fluid disabled:opacity-70 disabled:cursor-not-allowed group flex items-center justify-center gap-2"
+            onClick={handleLogin} 
+            disabled={!selectedUser || loading || isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Memverifikasi...
+              </>
+            ) : (
+              <span className="relative z-10 drop-shadow-sm">Masuk ke Sistem</span>
+            )}
+          </button>
+        </div>
+
       </div>
     </div>
   );
