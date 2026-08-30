@@ -5,6 +5,52 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useStore } from '../store.js';
 import { MagnifyingGlassIcon, ClipboardDocumentListIcon, PlusIcon, ClockIcon, ChevronDownIcon, ArrowRightOnRectangleIcon, Cog8ToothIcon } from '@heroicons/react/24/outline';
 
+// ── Live Shift Indicator ──
+function LiveShiftIndicator() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const getShift = (hours) => {
+    if (hours >= 7 && hours < 14) return 'Shift Pagi';
+    if (hours >= 14 && hours < 21) return 'Shift Siang';
+    return 'Shift Malam';
+  };
+
+  const hours = time.getHours();
+  const shift = getShift(hours);
+
+  // Format date: e.g., "30 Ags 2026"
+  const dateStr = time.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+
+  // Format time: e.g., "14:05:30"
+  const timeStr = time.toLocaleTimeString('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(/\./g, ':'); // some locales use dot for time, ensure colon
+
+  return (
+    <div className="px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 flex items-center gap-2 text-sm font-medium text-slate-600 shadow-sm transition-all duration-300">
+      <ClockIcon className="w-4 h-4 text-slate-500 shrink-0" />
+      <div className="flex items-center gap-1.5 whitespace-nowrap">
+        <span>{dateStr},</span>
+        <span className="tabular-nums font-mono text-slate-700 font-semibold">{timeStr}</span>
+        <span className="text-slate-300">•</span>
+        <span className="text-primary font-bold">{shift}</span>
+      </div>
+    </div>
+  );
+}
+
 export function TopBar() {
   const currentUser = useStore(s => s.currentUser);
   const setCurrentUser = useStore(s => s.setCurrentUser);
@@ -29,13 +75,6 @@ export function TopBar() {
   const handleLogout = () => {
     setDropdownOpen(false);
     setCurrentUser(null);
-  };
-
-  const getShiftLabel = () => {
-    const h = new Date().getHours();
-    if (h >= 6 && h < 14) return 'Pagi';
-    if (h >= 14 && h < 22) return 'Siang';
-    return 'Malam';
   };
 
   const initials = (currentUser?.nama_lengkap || '')
@@ -77,10 +116,8 @@ export function TopBar() {
 
       <div className="flex-1" />
 
-      <div className="flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-md text-xs font-medium text-slate-500 border border-slate-100">
-        <ClockIcon className="w-4 h-4" />
-        Shift {getShiftLabel()}
-      </div>
+      {/* Live Shift & Clock Indicator */}
+      <LiveShiftIndicator />
 
       {/* User Profile Dropdown */}
       <div className="relative border-l border-slate-200 pl-4" ref={dropdownRef}>
