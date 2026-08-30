@@ -5,10 +5,20 @@ import fastifyWebsocket from '@fastify/websocket';
 import fastifyFormbody from '@fastify/formbody';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 import { getDb } from './db.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Re-seed DB automatically on every server start for fresh demo data
+try {
+  console.log('🔄 Mengatur ulang database dengan data simulasi segar...');
+  execSync('node seed.js', { cwd: __dirname, stdio: 'inherit' });
+} catch (err) {
+  console.error('Gagal me-reset database:', err);
+}
+
 const PORT = process.env.PORT || 3000;
 
 const fastify = Fastify({ logger: false });
