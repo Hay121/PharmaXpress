@@ -53,24 +53,24 @@ export function LoginPage() {
   }));
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center relative bg-[url('/bghospital.jpg')] bg-cover bg-center overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center relative bg-slate-900 bg-[url('/bg-hospital.jpg')] bg-cover bg-center bg-no-repeat bg-blend-overlay overflow-hidden">
       
       {/* Dark Overlay for Cinematic Contrast */}
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-brightness-75"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/90"></div>
 
       {/* Glassmorphism Auth Card */}
-      <div className="z-10 relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/50 border border-white/20 w-full max-w-md p-8 mx-4">
+      <div className="relative z-10 w-full max-w-md p-10 mx-4 bg-white/80 backdrop-blur-2xl border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-3xl">
         
         {/* Official Hospital Logo */}
         <img 
           src="/logo-rs.png" 
           alt="Logo RS Indriati" 
-          className="h-16 w-auto object-contain mx-auto mb-6 drop-shadow-sm" 
+          className="mb-8 h-16 w-auto object-contain mx-auto" 
         />
         
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Otentikasi Sistem</h2>
-          <p className="text-sm text-slate-500">Silakan masuk untuk mengakses sistem Farmasi.</p>
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight text-center">Otentikasi Sistem</h2>
+          <p className="text-sm text-slate-600 text-center mt-2 mb-8 font-medium">Silakan masuk untuk mengakses sistem Farmasi.</p>
         </div>
 
         <div className={`space-y-5 transition-transform duration-200 ${loginError ? 'animate-shake' : ''}`}>
