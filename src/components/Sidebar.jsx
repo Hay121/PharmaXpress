@@ -89,7 +89,7 @@ export function Sidebar() {
         ) : (
           <>
             {renderGroup('CITO / Urgent', 'bg-red-500', grouped.CITO)}
-            {renderGroup('Dalam Proses', 'bg-primary', grouped.IN_PROGRESS)}
+            {renderGroup('Dalam Proses', 'bg-blue-500', grouped.IN_PROGRESS)}
             {renderGroup('Rawat Inap', 'bg-amber-500', grouped.RAWAT_INAP)}
             {renderGroup('Rawat Jalan', 'bg-emerald-500', grouped.RAWAT_JALAN)}
           </>
