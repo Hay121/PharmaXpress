@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../api.js';
 import { ShieldCheck, AlertCircle, ShieldAlert, Search } from 'lucide-react';
+import { GLOBAL_DRUG_DATABASE } from '../data/mockDatabase.js';
 
 export function AuditEdPage() {
   const [inventory, setInventory] = useState([]);
@@ -8,14 +8,12 @@ export function AuditEdPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    api.getInventory().then(res => {
-      // Sort to show closest ED first for drama
-      const sorted = res.data.sort((a, b) => {
-        return new Date(a.tanggal_kadaluarsa) - new Date(b.tanggal_kadaluarsa);
-      });
-      setInventory(sorted);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    // Sort to show closest ED first for drama
+    const sorted = [...GLOBAL_DRUG_DATABASE].sort((a, b) => {
+      return new Date(a.tanggal_kadaluarsa) - new Date(b.tanggal_kadaluarsa);
+    });
+    setInventory(sorted);
+    setLoading(false);
   }, []);
 
   const filteredInventory = inventory.filter(d => 

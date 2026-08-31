@@ -10,7 +10,8 @@ import {
   BarChart4, 
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Activity
 } from 'lucide-react';
 
 export function AppSidebar() {
@@ -42,21 +43,21 @@ export function AppSidebar() {
   ];
 
   return (
-    <aside className={`bg-white border-r border-slate-200 h-screen flex flex-col z-20 transition-all duration-300 ease-in-out relative flex-shrink-0 ${isCollapsed ? 'w-20' : 'w-64'}`}>
+    <aside className={`bg-white border-r border-slate-200 h-screen flex flex-col z-20 transition-[width] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative flex-shrink-0 ${isCollapsed ? 'w-20' : 'w-64'}`}>
       
       {/* Toggle Button */}
       <button 
         onClick={() => setIsCollapsed(!isCollapsed)} 
-        className="absolute -right-3 top-5 bg-white border border-slate-200 rounded-full p-1 shadow-sm hover:bg-slate-50 transition-colors z-50"
+        className="absolute -right-3.5 top-6 w-7 h-7 bg-white border border-slate-200 rounded-full flex items-center justify-center hover:bg-slate-50 hover:scale-110 transition-all shadow-md z-50"
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4 text-slate-500" /> : <ChevronLeft className="w-4 h-4 text-slate-500" />}
       </button>
 
       {/* Brand Header */}
       <div className={`flex items-center h-16 border-b border-slate-200 ${isCollapsed ? 'justify-center flex-col gap-1' : 'gap-2 px-6'}`}>
-        <svg className="w-6 h-6 text-teal-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
+        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">
+          <Activity className="w-5 h-5 text-teal-600" />
+        </div>
         {!isCollapsed ? (
           <span className="text-xl font-bold tracking-tight text-slate-800 whitespace-nowrap">Pharma<span className="text-teal-600">Xpress</span></span>
         ) : (

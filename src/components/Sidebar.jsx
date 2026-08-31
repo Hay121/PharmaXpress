@@ -6,7 +6,7 @@ import { useStore } from '../store.js';
 import { ElapsedTimer } from './ElapsedTimer.jsx';
 import { UserIcon, BuildingOffice2Icon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
-export function Sidebar() {
+export function Sidebar({ queueSearchTerm = '' }) {
   const prescriptions = useStore(s => s.prescriptions);
   const selectedRxId = useStore(s => s.selectedRxId);
   const setSelectedRxId = useStore(s => s.setSelectedRxId);
@@ -20,6 +20,12 @@ export function Sidebar() {
       RAWAT_JALAN: [],
     };
     for (const rx of prescriptions) {
+      if (queueSearchTerm) {
+        const search = queueSearchTerm.toLowerCase();
+        if (!rx.nama_pasien?.toLowerCase().includes(search) && !rx.nomor_resep?.toLowerCase().includes(search)) {
+          continue;
+        }
+      }
       if (rx.status === 'IN_PROGRESS') {
         groups.IN_PROGRESS.push(rx);
       } else if (rx.priority === 'CITO') {
@@ -31,7 +37,7 @@ export function Sidebar() {
       }
     }
     return groups;
-  }, [prescriptions]);
+  }, [prescriptions, queueSearchTerm]);
 
   const renderGroup = (label, dotClass, items) => {
     if (items.length === 0) return null;

@@ -208,28 +208,44 @@ export function Workspace({ onRefresh }) {
   const isDispensable = rx.status === 'IN_PROGRESS' || rx.status === 'PENDING';
 
   return (
-    <div key={rx.id} className="h-full flex flex-col gap-6 animate-in fade-in duration-300 bg-white">
-      {/* Prescription Header */}
-      <div className="flex items-start justify-between px-6 pt-6">
-        <div>
-          <div className="text-2xl font-bold text-slate-900 flex items-center gap-3">
-            {patientName}
-            {renderHeaderPill(rx.priority)}
-            {statusBadge(rx.status)}
+    <div key={rx.id} className="h-full flex flex-col animate-in fade-in duration-300 bg-slate-50 overflow-hidden">
+      
+      {/* Box 1: Patient Info */}
+      <div className="bg-white border border-slate-200 rounded-lg p-4 mb-4 shadow-sm mx-6 mt-6 shrink-0">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="text-xl font-bold text-slate-900 flex items-center gap-3">
+              {patientName}
+              {renderHeaderPill(rx.priority)}
+              {statusBadge(rx.status)}
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3 pt-3 border-t border-slate-100">
+              <div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">No. Resep</div>
+                <div className="text-sm font-medium text-slate-900">{rx.nomor_resep}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dokter</div>
+                <div className="text-sm font-medium text-slate-900">{doctorName}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Poli/Ruangan</div>
+                <div className="text-sm font-medium text-slate-900">{rx.asal_poli}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">No. RM</div>
+                <div className="text-sm font-medium text-slate-900">{rx.no_rekam_medis || '-'}</div>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-            Resep: {rx.nomor_resep} &bull; {doctorName} &bull; {rx.asal_poli} {rx.no_rekam_medis ? `\u2022 RM: ${rx.no_rekam_medis}` : ''}
+          <div className="ml-4 shrink-0">
+            <LargeTimer since={rx.waktu_masuk} />
           </div>
         </div>
-        <LargeTimer since={rx.waktu_masuk} />
-      </div>
-
-
-
-      {/* Drug Table */}
-      <div className="flex-1 overflow-y-auto bg-surface flex justify-center">
-        <div className="w-full max-w-7xl px-6 py-4">
-          <div className="w-full overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm">
+      </div>      {/* Drug Table */}
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden mb-4">
+          <div className="w-full overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-white border-b border-slate-200 text-xs font-medium text-slate-400 uppercase tracking-wider text-left">
                 <tr>
@@ -332,11 +348,19 @@ export function Workspace({ onRefresh }) {
           </table>
           </div>
         </div>
+
+        {/* Box 3: Doctor's Note */}
+        {rx.catatan_dokter && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800 shadow-sm mb-4">
+            <div className="font-bold text-sm mb-1 flex items-center gap-1.5"><DocumentTextIcon className="w-4 h-4"/> Catatan Khusus Dokter:</div>
+            <div className="text-sm font-medium">{rx.catatan_dokter}</div>
+          </div>
+        )}
       </div>
 
       {/* Actions Panel */}
       {isDispensable && (
-      <div className="pt-4 border-t border-slate-100 flex justify-end shrink-0">
+      <div className="bg-white p-4 border-t border-slate-200 flex justify-end shrink-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-3 w-full max-w-md">
           {rx.status !== 'COMPLETED' ? (
             currentUser?.role === 'APOTEKER' ? (

@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Search, Plus, Download, Filter, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { GLOBAL_DRUG_DATABASE } from '../data/mockDatabase.js';
 
 export function MasterObatPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeAction, setActiveAction] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const dummyDrugs = [
-    { id: 'OBT-0001', nama: 'Amoxicillin Trihydrate 500mg', kategori: 'Antibiotik', stok: 450, satuan: 'Kapsul', harga: 850, status: 'Aman' },
-    { id: 'OBT-0002', nama: 'Paracetamol 500mg', kategori: 'Analgesik', stok: 12, satuan: 'Tablet', harga: 250, status: 'Menipis' },
-    { id: 'OBT-0003', nama: 'Omeprazole 20mg', kategori: 'Antasida', stok: 0, satuan: 'Kapsul', harga: 1200, status: 'Kosong' },
-    { id: 'OBT-0004', nama: 'Amlodipine Besylate 5mg', kategori: 'Antihipertensi', stok: 820, satuan: 'Tablet', harga: 400, status: 'Aman' },
-    { id: 'OBT-0005', nama: 'Metformin HCl 500mg', kategori: 'Antidiabetes', stok: 310, satuan: 'Tablet', harga: 300, status: 'Aman' },
-    { id: 'OBT-0006', nama: 'Simvastatin 10mg', kategori: 'Antikolesterol', stok: 55, satuan: 'Tablet', harga: 600, status: 'Menipis' },
-  ];
+  const [searchObat, setSearchObat] = useState('');
+
+  const dummyDrugs = GLOBAL_DRUG_DATABASE;
+  
+  const filteredObat = dummyDrugs.filter(o => o.nama_dagang.toLowerCase().includes(searchObat.toLowerCase()) || o.kode_obat.toLowerCase().includes(searchObat.toLowerCase()));
 
   const exportToCSV = (filename, data) => {
     const csv = data.map(row => Object.values(row).join(',')).join('\n');
@@ -56,14 +54,14 @@ export function MasterObatPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <div className="relative w-72">
+              <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input 
-                type="text"
-                placeholder="Cari nama atau kode..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none min-w-[240px]"
+                type="text" 
+                placeholder="Cari obat atau kode..." 
+                value={searchObat}
+                onChange={(e) => setSearchObat(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
               />
             </div>
             <button 
@@ -107,22 +105,34 @@ export function MasterObatPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {dummyDrugs.map((d) => (
-                  <tr key={d.id} className="hover:bg-slate-50 transition-colors duration-150">
-                    <td className="py-4 px-6 text-sm font-mono text-slate-500 whitespace-nowrap">{d.id}</td>
-                    <td className="py-4 px-6 whitespace-nowrap">
-                      <div className="text-sm font-bold text-slate-900">{d.nama}</div>
-                    </td>
-                    <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{d.kategori}</td>
-                    <td className="py-4 px-6 text-sm font-semibold text-slate-800 text-right tabular-nums whitespace-nowrap">{d.stok} {d.satuan}</td>
-                    <td className="py-4 px-6 text-sm font-medium text-slate-600 text-right tabular-nums whitespace-nowrap">Rp {d.harga.toLocaleString('id-ID')}</td>
-                    <td className="py-4 px-6 whitespace-nowrap text-center">
-                      {d.status === 'Aman' && <span className="inline-flex px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold">Aman</span>}
-                      {d.status === 'Menipis' && <span className="inline-flex px-2 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-xs font-bold">Menipis</span>}
-                      {d.status === 'Kosong' && <span className="inline-flex px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-md text-xs font-bold">Kosong</span>}
-                    </td>
-                  </tr>
-                ))}
+                {filteredObat.map((drug) => (
+                <tr key={drug.id} className="hover:bg-slate-50">
+                  <td className="p-4 align-middle whitespace-nowrap">
+                    <span className="font-mono text-sm text-slate-500">{drug.kode_obat}</span>
+                  </td>
+                  <td className="p-4 align-middle whitespace-nowrap">
+                    <span className="font-semibold text-slate-800">{drug.nama_dagang}</span>
+                  </td>
+                  <td className="p-4 align-middle whitespace-nowrap text-sm text-slate-600">{drug.kategori}</td>
+                  <td className="p-4 align-middle whitespace-nowrap text-right font-mono font-medium">{drug.stok_saat_ini} {drug.satuan}</td>
+                  <td className="p-4 align-middle whitespace-nowrap text-right font-mono text-slate-600">Rp {drug.harga_satuan.toLocaleString('id-ID')}</td>
+                  <td className="p-4 align-middle whitespace-nowrap text-center">
+                    <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${
+                      drug.stok_saat_ini === 0 ? 'bg-rose-100 text-rose-700' : 
+                      drug.stok_saat_ini < 20 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'
+                    }`}>
+                      {drug.stok_saat_ini === 0 ? 'Habis' : drug.stok_saat_ini < 20 ? 'Menipis' : 'Aman'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              {filteredObat.length === 0 && (
+                <tr>
+                  <td colSpan="6" className="p-8 text-center text-slate-500">
+                    Tidak ada obat yang cocok dengan pencarian.
+                  </td>
+                </tr>
+              )}
               </tbody>
             </table>
         </div>

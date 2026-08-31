@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // PharmaXpress — Main App Shell
 // ═══════════════════════════════════════════
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useStore } from './store.js';
 import { api } from './api.js';
@@ -31,7 +31,8 @@ import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
   const searchOpen = useStore(s => s.searchOpen);
-  const setSearchOpen = useStore(s => s.setSearchOpen);
+  const setSubPanelItemId = useStore(s => s.setSubPanelItemId);
+  const [queueSearchTerm, setQueueSearchTerm] = useState('');
   const newRxFormOpen = useStore(s => s.newRxFormOpen);
   const setNewRxFormOpen = useStore(s => s.setNewRxFormOpen);
   const confirmDialog = useStore(s => s.confirmDialog);
@@ -90,10 +91,10 @@ export default function App() {
     if (!currentUser) return;
 
     const handleKeyDown = (e) => {
-      // Ctrl+K — Search
+      // Ctrl+K — Search (Disabled global modal, focus input locally if needed)
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        setSearchOpen(true);
+        document.getElementById('queue-search-input')?.focus();
       }
       // Alt+N — New prescription
       if (e.altKey && e.key.toLowerCase() === 'n') {
@@ -189,11 +190,16 @@ export default function App() {
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
                   <div className="p-4 border-b border-slate-100 bg-white flex-shrink-0 flex justify-between items-center">
                     <div className="w-[400px] relative">
-                      <button className="flex items-center gap-2 w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
-                        <MagnifyingGlassIcon className="w-4 h-4 shrink-0" />
-                        <span className="truncate">Cari antrean (nama pasien, no resep)...</span>
-                        <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
-                      </button>
+                      <MagnifyingGlassIcon className="w-4 h-4 shrink-0 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input 
+                        id="queue-search-input"
+                        type="text" 
+                        value={queueSearchTerm}
+                        onChange={(e) => setQueueSearchTerm(e.target.value)}
+                        placeholder="Cari antrean (nama pasien, no resep)..." 
+                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+                      />
+                      <kbd className="absolute right-3 top-1/2 -translate-y-1/2 font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0 pointer-events-none">Ctrl+K</kbd>
                     </div>
                     <div>
                       {currentUser?.role === 'DOKTER' ? (
@@ -206,7 +212,7 @@ export default function App() {
                   </div>
                   <div className="flex-1 flex min-h-0 overflow-hidden">
                     <div className="w-[340px] flex-shrink-0 border-r border-slate-100 bg-white overflow-y-auto">
-                      <Sidebar />
+                      <Sidebar queueSearchTerm={queueSearchTerm} />
                     </div>
                     <div className="flex-1 bg-white overflow-y-auto p-6">
                       <Workspace onRefresh={loadData} />
