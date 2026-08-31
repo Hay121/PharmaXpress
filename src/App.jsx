@@ -169,30 +169,30 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="h-screen w-full flex overflow-hidden">
+      <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
         
         {/* MILESTONE 1: The Enterprise App Shell (Left Sidebar) */}
         <AppSidebar />
         
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
+        <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
           <TopBar />
           
           {/* Main Routing Area */}
-          <main className="flex-1 flex flex-col overflow-hidden relative">
+          <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
             <Routes>
               {/* Default Redirect to Antrean */}
               <Route path="/" element={<Navigate to="/antrean" replace />} />
               
               {/* MILESTONE 2: The Core Routing Preservation */}
               <Route path="/antrean" element={
-                <div className="flex-1 flex flex-col overflow-hidden w-full h-full">
-                  <div className="h-14 w-full bg-slate-50 border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0">
+                <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                  <div className="p-4 border-b border-slate-200 bg-white flex-shrink-0 flex justify-between items-center">
                     <div className="w-[400px] relative">
-                      <button className="flex items-center gap-2 w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-50 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
+                      <button className="flex items-center gap-2 w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
                         <MagnifyingGlassIcon className="w-4 h-4 shrink-0" />
                         <span className="truncate">Cari antrean (nama pasien, no resep)...</span>
-                        <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
+                        <kbd className="ml-auto font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0">Ctrl+K</kbd>
                       </button>
                     </div>
                     <div>
@@ -204,9 +204,13 @@ export default function App() {
                       ) : null}
                     </div>
                   </div>
-                  <div className="flex-1 flex overflow-hidden w-full h-full">
-                    <Sidebar />
-                    <Workspace onRefresh={loadData} />
+                  <div className="flex-1 flex min-h-0 overflow-hidden">
+                    <div className="w-[340px] flex-shrink-0 border-r border-slate-200 bg-white overflow-y-auto">
+                      <Sidebar />
+                    </div>
+                    <div className="flex-1 bg-slate-50 overflow-y-auto p-6">
+                      <Workspace onRefresh={loadData} />
+                    </div>
                   </div>
                 </div>
               } />

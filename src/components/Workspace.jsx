@@ -181,7 +181,7 @@ export function Workspace({ onRefresh }) {
 
   if (!rx) {
     return (
-      <div className="flex-1 overflow-y-auto p-6 bg-slate-50 flex flex-col">
+      <div className="h-full flex flex-col items-center justify-center">
         <div className="empty-state">
           <div className="empty-state__icon text-slate-300"><ClipboardDocumentListIcon className="w-16 h-16 mx-auto mb-4"/></div>
           <div className="empty-state__title">Tidak ada resep dipilih</div>
@@ -208,7 +208,7 @@ export function Workspace({ onRefresh }) {
   const isDispensable = rx.status === 'IN_PROGRESS' || rx.status === 'PENDING';
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 bg-slate-50 flex flex-col gap-6">
+    <div className="h-full flex flex-col gap-6">
       {/* Prescription Header */}
       <div className="rx-header">
         <div className="rx-header__patient">

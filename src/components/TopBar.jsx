@@ -83,7 +83,7 @@ export function TopBar() {
     .toUpperCase();
 
   return (
-    <header className="h-16 flex-1 flex items-center justify-end px-6 bg-white border-b border-slate-200 z-50 flex-shrink-0">
+    <header className="h-16 flex-shrink-0 border-b border-slate-200 bg-white flex items-center justify-end px-6 z-20">
       
       {/* Right: Shift & Profile */}
       <div className="flex items-center gap-6 whitespace-nowrap flex-shrink-0">
