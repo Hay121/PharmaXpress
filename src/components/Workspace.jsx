@@ -135,6 +135,7 @@ export function Workspace({ onRefresh }) {
             patient: patientName,
             poli: rx.asal_poli,
             itemsCount: rx.items.length,
+            items: rx.items,
             duration: `${durationMins}m`
           };
 

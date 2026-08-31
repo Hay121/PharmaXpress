@@ -80,13 +80,17 @@ export function RiwayatPage() {
                         <td colSpan="6" className="p-4 bg-slate-50 border-b border-slate-200">
                           <div className="border border-slate-200 rounded bg-white p-4">
                             <h4 className="font-semibold text-sm mb-2">Rincian Item:</h4>
-                            <ul className="text-sm text-slate-600 list-disc list-inside">
-                              {/* Using fallback if items are missing since we didn't pass items array from Dispense earlier */}
-                              {row.items?.length > 0 ? (
-                                row.items.map((item, i) => <li key={i}>{item.nama} - {item.qty}</li>)
-                              ) : (
-                                <li>Data item terenkripsi / diringkas dalam riwayat.</li>
-                              )}
+                            <ul className="space-y-2 mt-2">
+                              {row.items?.map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 flex-shrink-0"></span>
+                                  <div>
+                                    <span className="font-semibold">{item.nama}</span> 
+                                    <span className="text-slate-500"> — {item.dosis || 'Sesuai resep'} ({item.qty} {item.satuan || 'Item'})</span>
+                                    {item.catatan && <p className="text-xs text-amber-600 mt-0.5">Catatan: {item.catatan}</p>}
+                                  </div>
+                                </li>
+                              ))} 
                             </ul>
                           </div>
                         </td>

@@ -29,7 +29,7 @@ export function AppSidebar() {
       title: 'INVENTORI & GUDANG',
       items: [
         { name: 'Master Obat', path: '/master-obat', icon: Box },
-        { name: 'Audit Kedaluwarsa (ED)', path: '/audit-ed', icon: AlertTriangle },
+        { name: 'Audit Kedaluwarsa', path: '/audit-ed', icon: AlertTriangle },
         { name: 'Surat Permintaan', path: '/surat-permintaan', icon: FileText },
       ]
     },

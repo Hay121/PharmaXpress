@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart4, Download, FileText, Calendar, Filter, Loader2 } from 'lucide-react';
+import { BarChart4, Download, FileText, Calendar, Filter, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useStore } from '../store.js';
 
@@ -90,11 +90,12 @@ export function LaporanPage() {
               <select 
                 value={jenisLaporan}
                 onChange={(e) => setJenisLaporan(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none font-medium cursor-pointer"
+                className="w-full appearance-none bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all"
               >
                 <option value="Dispensing Harian">Laporan Dispensing Harian</option>
                 <option value="Stok Masuk">Laporan Stok Masuk (Restock)</option>
               </select>
+              <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
           </div>
 
@@ -107,17 +108,17 @@ export function LaporanPage() {
                   type="date" 
                   value={startDate} 
                   onChange={(e) => setStartDate(e.target.value)} 
-                  className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" 
+                  className="w-full appearance-none [color-scheme:light] bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all text-sm" 
                 />
               </div>
-              <span className="text-slate-400">-</span>
+              <span className="text-slate-400 font-medium">-</span>
               <div className="relative">
                 <Calendar className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input 
                   type="date" 
                   value={endDate} 
                   onChange={(e) => setEndDate(e.target.value)} 
-                  className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" 
+                  className="w-full appearance-none [color-scheme:light] bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all text-sm" 
                 />
               </div>
             </div>

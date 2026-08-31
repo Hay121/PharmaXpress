@@ -131,7 +131,11 @@ export function SuratPermintaanPage() {
                       <input 
                         type="number" 
                         value={d.qty}
-                        onChange={(e) => updateQty(d.id, parseInt(e.target.value) || 0)}
+                        onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/^0+(?=\d)/, '');
+                          updateQty(d.id, val === '' ? 0 : parseInt(val));
+                        }}
                         className="w-20 p-1.5 border border-slate-300 rounded text-sm text-center tabular-nums outline-none focus:border-primary focus:ring-1 focus:ring-primary" 
                       />
                       <span className="text-sm text-slate-500">{d.satuan}</span>

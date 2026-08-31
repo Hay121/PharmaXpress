@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Box, Search, Plus, Download, Filter, Loader2 } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Box, Search, Plus, Download, Filter, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { useStore } from '../store.js';
 
 export function MasterObatPage() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [activeAction, setActiveAction] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -166,25 +165,40 @@ export function MasterObatPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
-                  <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white"
-                    value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
-                    <option>Antibiotik</option>
-                    <option>Analgesik</option>
-                    <option>Antasida</option>
-                    <option>Antihipertensi</option>
-                    <option>Vitamin</option>
-                  </select>
+                  <div className="relative">
+                    <select className="w-full appearance-none bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all"
+                      value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
+                      <option>Antibiotik</option>
+                      <option>Analgesik</option>
+                      <option>Antasida</option>
+                      <option>Antihipertensi</option>
+                      <option>Vitamin</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-slate-400 pointer-events-none" />
+                  </div>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Stok Awal</label>
                     <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" 
-                      value={newDrug.stok_saat_ini} onChange={e => setNewDrug({...newDrug, stok_saat_ini: parseInt(e.target.value) || 0})} />
+                      value={newDrug.stok_saat_ini} 
+                      onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/^0+(?=\d)/, '');
+                        setNewDrug({...newDrug, stok_saat_ini: val === '' ? 0 : parseInt(val)});
+                      }} 
+                    />
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Harga Satuan</label>
                     <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" 
-                      value={newDrug.harga_satuan} onChange={e => setNewDrug({...newDrug, harga_satuan: parseInt(e.target.value) || 0})} />
+                      value={newDrug.harga_satuan} 
+                      onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/^0+(?=\d)/, '');
+                        setNewDrug({...newDrug, harga_satuan: val === '' ? 0 : parseInt(val)});
+                      }} 
+                    />
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Satuan</label>
