@@ -84,14 +84,14 @@ export function RiwayatPage() {
                                   <div className="mt-1.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0 shadow-[0_0_8px_rgba(20,184,166,0.6)]"></div>
                                   <div className="flex-1">
                                     <div className="font-bold text-slate-800 text-base">
-                                      {item.nama || item.namaObat || item.name || 'Nama Obat Tidak Ditemukan'}
+                                      {item.nama_dagang || item.nama || item.namaObat || item.name || 'Nama Obat Tidak Ditemukan'}
                                       <span className="text-teal-800 font-semibold ml-2 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded text-sm shadow-sm">
-                                        {item.qty || item.jumlah || item.quantity || 1} {item.satuan || item.bentuk || 'Item'}
+                                        {item.quantity_prescribed || item.qty || item.jumlah || item.quantity || 1} {item.satuan || item.bentuk || 'Item'}
                                       </span>
                                     </div>
                                     <div className="text-sm text-slate-600 mt-1 flex items-center gap-1.5">
                                       <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-                                      {item.aturanPakai || item.dosis || 'Sesuai instruksi dokter'}
+                                      {item.dosis_instruksi || item.aturanPakai || item.dosis || 'Sesuai instruksi dokter'}
                                     </div>
                                   </div>
                                 </li>
