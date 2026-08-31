@@ -89,12 +89,11 @@ export function LaporanPage() {
             <div className="relative z-50">
               <CustomSelect 
                 value={jenisLaporan}
-                onChange={(e) => setJenisLaporan(e.target.value)}
+                onChange={(val) => setJenisLaporan(val)}
                 options={[
                   { value: 'Dispensing Harian', label: 'Laporan Dispensing Harian' },
                   { value: 'Stok Masuk', label: 'Laporan Stok Masuk (Restock)' }
                 ]}
-                className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
               />
             </div>
           </div>
