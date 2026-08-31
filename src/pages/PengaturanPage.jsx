@@ -41,12 +41,12 @@ export function PengaturanPage() {
         <div className="flex flex-col md:flex-row gap-8 items-start">
           
           {/* Side Tabs */}
-          <div className="w-full md:w-64 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0">
+          <div className="w-full md:w-72 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0">
             {tabs.map(tab => (
               <button 
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3.5 text-sm font-semibold transition-colors border-l-4 whitespace-nowrap ${
+                className={`w-full flex items-center gap-3 px-4 py-4 text-sm font-semibold transition-colors border-l-4 text-left ${
                   activeTab === tab.id 
                     ? 'border-primary bg-teal-50 text-teal-700' 
                     : 'border-transparent text-slate-600 hover:bg-slate-50'
