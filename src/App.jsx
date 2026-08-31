@@ -169,7 +169,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
+      <div className="flex h-screen w-full bg-white overflow-hidden">
         
         {/* MILESTONE 1: The Enterprise App Shell (Left Sidebar) */}
         <AppSidebar />
@@ -187,7 +187,7 @@ export default function App() {
               {/* MILESTONE 2: The Core Routing Preservation */}
               <Route path="/antrean" element={
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                  <div className="p-4 border-b border-slate-200 bg-white flex-shrink-0 flex justify-between items-center">
+                  <div className="p-4 border-b border-slate-100 bg-white flex-shrink-0 flex justify-between items-center">
                     <div className="w-[400px] relative">
                       <button className="flex items-center gap-2 w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-100 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
                         <MagnifyingGlassIcon className="w-4 h-4 shrink-0" />
@@ -205,10 +205,10 @@ export default function App() {
                     </div>
                   </div>
                   <div className="flex-1 flex min-h-0 overflow-hidden">
-                    <div className="w-[340px] flex-shrink-0 border-r border-slate-200 bg-white overflow-y-auto">
+                    <div className="w-[340px] flex-shrink-0 border-r border-slate-100 bg-white overflow-y-auto">
                       <Sidebar />
                     </div>
-                    <div className="flex-1 bg-slate-50 overflow-y-auto p-6">
+                    <div className="flex-1 bg-white overflow-y-auto p-6">
                       <Workspace onRefresh={loadData} />
                     </div>
                   </div>

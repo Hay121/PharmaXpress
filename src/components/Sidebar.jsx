@@ -76,7 +76,7 @@ export function Sidebar() {
 
   return (
     <aside className="w-full h-full flex flex-col shrink-0 overflow-hidden bg-white">
-      <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-surface">
+      <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white">
         <span className="text-sm font-semibold text-slate-700 tracking-wide uppercase">Antrean Resep</span>
         <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">{prescriptions.length} total</span>
       </div>
@@ -96,7 +96,7 @@ export function Sidebar() {
         )}
       </div>
 
-      <div className="p-4 border-t border-slate-200 grid grid-cols-3 gap-3 bg-surface">
+      <div className="p-4 border-t border-slate-100 grid grid-cols-3 gap-3 bg-white">
         <div className="text-center p-2 rounded-lg bg-slate-50 border border-slate-100">
           <div className="text-lg font-bold font-mono text-primary tabular-nums">{stats.dispensed_today || 0}</div>
           <div className="text-[10px] uppercase tracking-wide font-semibold text-slate-500 mt-0.5">Selesai</div>
