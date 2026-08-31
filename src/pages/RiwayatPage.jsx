@@ -75,17 +75,24 @@ export function RiwayatPage() {
                     </tr>
                     {expandedId === row.id && (
                       <tr>
-                        <td colSpan="6" className="p-4 bg-slate-50 border-b border-slate-200">
-                          <div className="border border-slate-200 rounded bg-white p-4">
-                            <h4 className="font-semibold text-sm mb-2">Rincian Item:</h4>
-                            <ul className="space-y-0 mt-2">
+                        <td colSpan="6" className="p-0 border-b border-slate-200">
+                          <div className="bg-slate-50 inset-shadow-sm px-6 py-5 border-l-4 border-l-teal-500 m-4 rounded-r-xl border-y border-r border-slate-200">
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-4 border-b border-slate-200 pb-2">Rincian Item Diserahkan</h4>
+                            <ul className="space-y-1">
                               {row.items?.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 flex-shrink-0"></div>
-                                  <div>
-                                    <div className="font-semibold text-slate-800">{item.nama} <span className="text-teal-700 font-medium ml-1">({item.qty} {item.satuan || 'Item'})</span></div>
-                                    <div className="text-sm text-slate-500 mt-0.5">{item.aturanPakai || 'Sesuai instruksi dokter'}</div>
-                                    {item.catatan && <div className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded mt-1">Note: {item.catatan}</div>}
+                                <li key={idx} className="flex items-start gap-3 py-3 border-b border-slate-200 last:border-0">
+                                  <div className="mt-1.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0 shadow-[0_0_8px_rgba(20,184,166,0.6)]"></div>
+                                  <div className="flex-1">
+                                    <div className="font-bold text-slate-800 text-base">
+                                      {item.nama || item.namaObat || item.name || 'Nama Obat Tidak Ditemukan'}
+                                      <span className="text-teal-800 font-semibold ml-2 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded text-sm shadow-sm">
+                                        {item.qty || item.jumlah || item.quantity || 1} {item.satuan || item.bentuk || 'Item'}
+                                      </span>
+                                    </div>
+                                    <div className="text-sm text-slate-600 mt-1 flex items-center gap-1.5">
+                                      <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                                      {item.aturanPakai || item.dosis || 'Sesuai instruksi dokter'}
+                                    </div>
                                   </div>
                                 </li>
                               ))} 

@@ -166,7 +166,7 @@ export function MasterObatPage() {
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
                   <div className="relative">
-                    <select className="appearance-none w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium"
+                    <select className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
                       value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
                       <option>Antibiotik</option>
                       <option>Analgesik</option>

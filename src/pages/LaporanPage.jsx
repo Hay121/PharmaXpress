@@ -89,7 +89,7 @@ export function LaporanPage() {
               <select 
                 value={jenisLaporan}
                 onChange={(e) => setJenisLaporan(e.target.value)}
-                className="appearance-none w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium"
+                className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
               >
                 <option value="Dispensing Harian">Laporan Dispensing Harian</option>
                 <option value="Stok Masuk">Laporan Stok Masuk (Restock)</option>
@@ -106,7 +106,7 @@ export function LaporanPage() {
                   type="date" 
                   value={startDate} 
                   onChange={(e) => setStartDate(e.target.value)} 
-                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium" 
+                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all" 
                 />
               </div>
               <span className="text-slate-400 font-medium">-</span>
@@ -115,7 +115,7 @@ export function LaporanPage() {
                   type="date" 
                   value={endDate} 
                   onChange={(e) => setEndDate(e.target.value)} 
-                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium" 
+                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all" 
                 />
               </div>
             </div>
