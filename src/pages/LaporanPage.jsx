@@ -7,17 +7,39 @@ export function LaporanPage() {
   const [jenisLaporan, setJenisLaporan] = useState('Laporan Dispensing Harian');
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const transactionHistory = useStore(s => s.transactionHistory);
+  const transactionHistory = useStore(s => s.transactions) || [];
   
-  const filteredLaporan = transactionHistory.filter(t => t.type === jenisLaporan);
+  const filteredLaporan = transactionHistory.filter(t => t.type === (jenisLaporan === 'Dispensing Harian' ? 'DISPENSE' : 'RESTOCK'));
 
   const exportToCSV = (filename, data) => {
     if (data.length === 0) {
       toast.error('Tidak ada data untuk diekspor!');
       return;
     }
-    const headers = Object.keys(data[0]).join(',');
-    const csv = [headers, ...data.map(row => Object.values(row).join(','))].join('\n');
+    const processedData = data.map(l => {
+      if (l.type === 'DISPENSE') {
+        return {
+          Tanggal: new Date(l.date).toLocaleDateString('id-ID'),
+          'Nomor Resep': l.id,
+          Pasien: l.patient,
+          'Asal Poli': l.poli,
+          Durasi: l.duration,
+          Status: 'Selesai'
+        };
+      } else {
+        return {
+          Tanggal: new Date(l.date).toLocaleDateString('id-ID'),
+          'Nomor Surat (SP)': l.id,
+          'Asal Depo': l.source,
+          'Item Diterima': l.items?.map(item => item.nama).join('; '),
+          'Total Qty': l.items?.reduce((sum, item) => sum + item.qty, 0),
+          Status: 'Selesai'
+        };
+      }
+    });
+
+    const headers = Object.keys(processedData[0]).join(',');
+    const csv = [headers, ...processedData.map(row => Object.values(row).map(val => `"${val}"`).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -100,24 +122,48 @@ export function LaporanPage() {
             <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Tanggal</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Nomor Resep</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Pasien</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Asal Poli</th>
-                  <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Durasi Dispensing</th>
+                  {jenisLaporan === 'Dispensing Harian' ? (
+                    <>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Nomor Resep</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Pasien</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Asal Poli</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Durasi</th>
+                    </>
+                  ) : (
+                    <>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Nomor Surat (SP)</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Asal Depo</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-left">Item Diterima</th>
+                      <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Total Qty</th>
+                    </>
+                  )}
                   <th className="py-3 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredLaporan.map((l) => (
-                  <tr key={l.id} className="hover:bg-slate-50 transition-colors duration-150">
-                    <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{l.tanggal}</td>
-                    <td className="py-3 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{l.nomor}</td>
-                    <td className="py-3 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">{l.pasien}</td>
-                    <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{l.poli}</td>
-                    <td className="py-3 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">{l.waktu}</td>
+                {filteredLaporan.map((l, i) => (
+                  <tr key={l.id || i} className="hover:bg-slate-50 transition-colors duration-150">
+                    <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{new Date(l.date).toLocaleDateString('id-ID')}</td>
+                    {jenisLaporan === 'Dispensing Harian' ? (
+                      <>
+                        <td className="py-3 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{l.id}</td>
+                        <td className="py-3 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">{l.patient}</td>
+                        <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{l.poli}</td>
+                        <td className="py-3 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">{l.duration}</td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="py-3 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{l.id}</td>
+                        <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{l.source}</td>
+                        <td className="py-3 px-6 text-sm text-slate-600 max-w-[200px] truncate">{l.items?.map(item => item.nama).join(', ')}</td>
+                        <td className="py-3 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">
+                          {l.items?.reduce((sum, item) => sum + item.qty, 0)}
+                        </td>
+                      </>
+                    )}
                     <td className="py-3 px-6 text-center whitespace-nowrap">
                       <span className="inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold">
-                        {l.status}
+                        Selesai
                       </span>
                     </td>
                   </tr>

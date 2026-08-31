@@ -67,12 +67,14 @@ export const useStore = create((set, get) => ({
   
   drugDatabase: GLOBAL_DRUG_DATABASE,
   
-  transactionHistory: [
-    { id: 1, tanggal: '2026-08-30', nomor: 'RX-20260830-1045', pasien: 'Budi Santoso', poli: 'IGD', waktu: '12 menit', status: 'Selesai', type: 'Dispensing Harian' },
-    { id: 2, tanggal: '2026-08-30', nomor: 'RX-20260830-1046', pasien: 'Sari Wulandari', poli: 'Rawat Jalan', waktu: '8 menit', status: 'Selesai', type: 'Dispensing Harian' },
-    { id: 3, tanggal: '2026-08-30', nomor: 'RX-20260830-1047', pasien: 'Andi Setiawan', poli: 'Rawat Inap', waktu: '24 menit', status: 'Selesai', type: 'Dispensing Harian' },
-    { id: 4, tanggal: '2026-08-30', nomor: 'RX-20260830-1048', pasien: 'Dewi Lestari', poli: 'Rawat Jalan', waktu: '15 menit', status: 'Selesai', type: 'Dispensing Harian' },
+  transactions: [
+    { id: 'RX-123', type: 'DISPENSE', date: new Date().toISOString(), patient: 'Ira', poli: 'IGD', itemsCount: 2, duration: '12m' },
+    { id: 'SP-999', type: 'RESTOCK', date: new Date().toISOString(), source: 'Gudang Pusat', items: [{nama: 'Amoxicillin', qty: 50}] }
   ],
+
+  addTransaction: (transaction) => set((s) => ({
+    transactions: [transaction, ...s.transactions]
+  })),
 
   addDrug: (newDrug) => set((s) => ({
     drugDatabase: [newDrug, ...s.drugDatabase]
@@ -90,21 +92,18 @@ export const useStore = create((set, get) => ({
           stok_saat_ini: updatedDb[idx].stok_saat_ini + (parseInt(cartItem.qty) || 0)
         };
         newTransactions.push({
-          id: Date.now() + Math.random(),
-          tanggal: new Date().toISOString().split('T')[0],
-          nomor: `RESTOCK-${cartItem.id}`,
-          pasien: 'Gudang Pusat',
-          poli: '-',
-          waktu: '-',
-          status: `+${cartItem.qty} ${cartItem.satuan}`,
-          type: 'Stok Masuk'
+          id: `SP-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+          type: 'RESTOCK',
+          date: new Date().toISOString(),
+          source: 'Gudang Pusat',
+          items: [{ nama: cartItem.nama_dagang || cartItem.nama, qty: parseInt(cartItem.qty) || 0 }]
         });
       }
     });
 
     return { 
       drugDatabase: updatedDb,
-      transactionHistory: [...newTransactions, ...s.transactionHistory]
+      transactions: [...newTransactions, ...s.transactions]
     };
   }),
 

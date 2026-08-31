@@ -1,20 +1,16 @@
 import React, { useState } from 'react';
-import { ArchiveBoxIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { ArchiveBoxIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, FaceFrownIcon } from '@heroicons/react/24/outline';
+import { useStore } from '../store.js';
 
 export function RiwayatPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const transactions = useStore(s => s.transactions) || [];
   
-  // Safe, static dummy array. Never undefined.
-  const riwayatData = [
-    { id: 'RX-260830-101', patient: 'Budi Santoso', doctor: 'dr. Hendra', timestamp: '2026-08-30 08:15', status: 'Selesai', items: 2 },
-    { id: 'RX-260830-102', patient: 'Sari Wulandari', doctor: 'dr. Dewi', timestamp: '2026-08-30 09:30', status: 'Selesai', items: 4 },
-    { id: 'RX-260830-103', patient: 'Andi Setiawan', doctor: 'dr. Hendra', timestamp: '2026-08-30 10:45', status: 'Selesai', items: 1 },
-    { id: 'RX-260830-104', patient: 'Dewi Lestari', doctor: 'dr. Budi', timestamp: '2026-08-30 11:20', status: 'Selesai', items: 3 },
-  ];
-
-  const filteredData = riwayatData.filter(d => 
-    d.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    d.patient.toLowerCase().includes(searchTerm.toLowerCase())
+  const riwayatDispense = transactions.filter(t => t.type === 'DISPENSE');
+  
+  const filteredData = riwayatDispense.filter(d => 
+    d.id?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    d.patient?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -60,29 +56,30 @@ export function RiwayatPage() {
                 <th className="py-4 px-6 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
-              {filteredData.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50 transition-colors duration-150 align-middle">
-                  <td className="py-4 px-6 text-sm font-mono font-medium text-slate-900 whitespace-nowrap align-middle">{item.id}</td>
-                  <td className="py-4 px-6 text-sm font-bold text-slate-900 whitespace-nowrap align-middle">{item.patient}</td>
-                  <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap align-middle">{item.doctor}</td>
-                  <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap tabular-nums align-middle">{item.timestamp}</td>
-                  <td className="py-4 px-6 text-sm font-semibold text-slate-800 text-right tabular-nums whitespace-nowrap align-middle">{item.items}</td>
-                  <td className="py-4 px-6 whitespace-nowrap text-center align-middle">
-                    <span className="inline-flex items-center justify-center px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold">
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {filteredData.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="py-8 text-center text-sm text-slate-500">
-                    Tidak ada riwayat yang ditemukan.
-                  </td>
-                </tr>
-              )}
-            </tbody>
+              <tbody className="divide-y divide-slate-100">
+                {filteredData.map((row) => (
+                  <tr key={row.id} className="hover:bg-slate-50 transition-colors duration-150">
+                    <td className="py-4 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{row.id}</td>
+                    <td className="py-4 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">{row.patient}</td>
+                    <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{row.poli || '-'}</td>
+                    <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{new Date(row.date).toLocaleString('id-ID')}</td>
+                    <td className="py-4 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">{row.itemsCount || 1}</td>
+                    <td className="py-4 px-6 text-center whitespace-nowrap">
+                      <span className="inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold shadow-sm">
+                        Selesai
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+                {filteredData.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="py-16 text-center">
+                      <FaceFrownIcon className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                      <div className="text-slate-500 font-medium">Belum ada resep yang diserahkan hari ini.</div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
           </table>
         </div>
 

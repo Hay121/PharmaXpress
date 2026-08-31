@@ -18,9 +18,11 @@ export function Workspace({ onRefresh }) {
   const setFocusedItemIdx = useStore(s => s.setFocusedItemIdx);
   const subPanelItemId = useStore(s => s.subPanelItemId);
   const setSubPanelItemId = useStore(s => s.setSubPanelItemId);
-  const substitutions = useStore(s => s.substitutions);
+  const substitutions = useStore(s => s.substitutions) || {};
   const addSubstitution = useStore(s => s.addSubstitution);
   const clearSubstitutions = useStore(s => s.clearSubstitutions);
+  const addTransaction = useStore(s => s.addTransaction);
+  const removePrescription = useStore(s => s.removePrescription);
   const setSelectedRxDetail = useStore(s => s.setSelectedRxDetail);
 
   // Auto-start when selecting a PENDING prescription
@@ -122,21 +124,30 @@ export function Workspace({ onRefresh }) {
         confirmLabel: 'Dispensing Sekarang',
         onConfirm: async () => {
         setConfirmDialog(null);
+        setConfirmDialog(null);
         try {
-          const res = await api.dispensePrescription(rx.id, {
-            dispensing_pharmacist_id: currentUser.id,
-            items: dispenseItems,
-          });
+          // Dynamic Transaction Ledger Logic
+          const durationMins = Math.floor((new Date() - new Date(rx.waktu_masuk)) / 60000) || 5;
+          const payload = {
+            id: rx.nomor_resep,
+            type: 'DISPENSE',
+            date: new Date().toISOString(),
+            patient: patientName,
+            poli: rx.asal_poli,
+            itemsCount: rx.items.length,
+            duration: `${durationMins}m`
+          };
+
+          addTransaction(payload);
+          removePrescription(rx.id);
+
           toast.success(`Dispensing Berhasil: ${rx.nomor_resep}`, {
-            description: `Durasi proses: ${res.data.durasi_proses_detik} detik`,
+            description: `Waktu dispensing selesai.`
           });
-          setTimeout(() => {
-            onRefresh();
-          }, 1000);
         } catch (err) {
           console.error('Dispense error:', err);
           toast.error('Gagal Dispensing', {
-            description: err?.error?.message || 'Terjadi kesalahan saat dispensing. Coba lagi.'
+            description: 'Terjadi kesalahan saat dispensing. Coba lagi.'
           });
         }
       },
