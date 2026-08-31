@@ -52,12 +52,7 @@ export function LoginPage() {
     label: `${u.nama_lengkap} (${u.role})`
   }));
 
-  const scrollToFeatures = () => {
-    const featuresEl = document.getElementById('features-section');
-    if (featuresEl) {
-      featuresEl.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+
 
   return (
     <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
@@ -172,63 +167,6 @@ export function LoginPage() {
           </div>
         </div>
 
-        {/* ── STEP 2: SCROLL INDICATOR ── */}
-        <button 
-          onClick={scrollToFeatures}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-white/50 hover:text-white transition-colors p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white rounded-full"
-          aria-label="Scroll down to features"
-        >
-          <ChevronDownIcon className="w-8 h-8 animate-bounce" />
-        </button>
-
-      </section>
-
-      {/* ── STEP 3: "ABOUT PHARMAXPRESS" SECTION ── */}
-      <section id="features-section" className="min-h-screen bg-slate-50 py-24 px-10 md:px-20 flex flex-col items-center justify-center">
-        
-        <div className="max-w-5xl w-full">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-4">Mengapa PharmaXpress?</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg">Infrastruktur farmasi kelas atas yang dirancang untuk mengatasi antrean bottleneck melalui integrasi real-time dan otomasi cerdas.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            
-            {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-default">
-              <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <BoltIcon className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">High-Velocity UI</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Antarmuka nol-latensi dengan navigasi pintasan *keyboard* penuh (Ctrl+K, Alt+N) untuk memasukkan puluhan resep dalam hitungan menit tanpa menyentuh *mouse*.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-default">
-              <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <CircleStackIcon className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Presisi Stok Real-Time</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Manajemen inventori *real-time* cerdas. Mencegah kegagalan *out-of-stock* secara diam-diam dan merekomendasikan substitusi farmakologis instan.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group cursor-default">
-              <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                <ShieldCheckIcon className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">Keamanan Data Pasien</h3>
-              <p className="text-slate-600 leading-relaxed">
-                Dibangun dengan enkripsi mutakhir dan protokol manajemen data sintetis untuk menjamin kepatuhan penuh terhadap standar akreditasi KARS dan privasi medis.
-              </p>
-            </div>
-
-          </div>
-        </div>
       </section>
       
     </div>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { FileText, Search, Send, Clock, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { CustomSelect } from '../components/CustomSelect.jsx';
 import { useStore } from '../store.js';
 
 export function SuratPermintaanPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [draft, setDraft] = useState([]);
+  const [depo, setDepo] = useState('Gudang Farmasi Utama');
   
   const drugDatabase = useStore(s => s.drugDatabase);
   const restockDrugs = useStore(s => s.restockDrugs);
@@ -107,10 +109,11 @@ export function SuratPermintaanPage() {
             <div className="p-4 border-b border-slate-100 flex flex-col gap-4">
               <div>
                 <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5 block">Depo Tujuan</label>
-                <select className="appearance-none w-full bg-white border border-slate-300 rounded-md py-2 pl-3 pr-10 shadow-sm focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm font-medium">
-                  <option>Gudang Farmasi Utama</option>
-                  <option>Gudang Logistik Non-Medis</option>
-                </select>
+                <CustomSelect
+                  value={depo}
+                  onChange={(val) => setDepo(val)}
+                  options={['Gudang Farmasi Utama', 'Gudang Logistik Non-Medis']}
+                />
               </div>
             </div>
 

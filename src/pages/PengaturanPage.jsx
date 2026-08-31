@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Shield, User, Bell } from 'lucide-react';
+import { Settings, Shield, User, Bell, Database, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function PengaturanPage() {
