@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Box, Search, Plus, Download, Filter, Loader2, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { CustomSelect } from '../components/CustomSelect.jsx';
 import { useStore } from '../store.js';
 
 export function MasterObatPage() {
@@ -165,16 +166,13 @@ export function MasterObatPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
-                  <div className="relative">
-                    <select className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
-                      value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
-                      <option>Antibiotik</option>
-                      <option>Analgesik</option>
-                      <option>Antasida</option>
-                      <option>Antihipertensi</option>
-                      <option>Vitamin</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                  <div className="relative z-50">
+                    <CustomSelect 
+                      className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl px-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
+                      value={newDrug.kategori} 
+                      onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}
+                      options={['Antibiotik', 'Analgesik', 'Antasida', 'Antihipertensi', 'Vitamin']}
+                    />
                   </div>
                 </div>
                 <div className="flex gap-4">

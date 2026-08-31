@@ -1,63 +1,56 @@
-import React from 'react';
-import { Listbox, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, CheckIcon } from '@heroicons/react/20/solid';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 
-export function CustomSelect({ value, onChange, options, label, placeholder = 'Pilih...' }) {
-  const selectedOption = options.find(o => o.value === value);
+export function CustomSelect({ value, onChange, options, className }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
+
+  const selectedOption = options.find(opt => (opt.value || opt) === value);
+  const displayLabel = selectedOption ? (selectedOption.label || selectedOption.value || selectedOption) : 'Pilih...';
 
   return (
-    <Listbox value={value} onChange={onChange}>
-      {({ open }) => (
-        <div className="relative mt-1">
-          {label && <Listbox.Label className="block text-sm font-medium text-slate-700 mb-1">{label}</Listbox.Label>}
-          <div className="relative">
-            <Listbox.Button className="relative w-full cursor-default rounded-xl bg-white/50 backdrop-blur-sm py-2.5 pl-4 pr-10 text-left shadow-sm ring-1 ring-inset ring-slate-200/80 focus:outline-none focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6 hover:bg-slate-50/80 transition-all duration-200 ease-fluid">
-              <span className="block truncate text-slate-900">{selectedOption ? selectedOption.label : <span className="text-slate-400">{placeholder}</span>}</span>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <ChevronUpDownIcon className="h-5 w-5 text-slate-400" aria-hidden="true" />
-              </span>
-            </Listbox.Button>
-
-            <Transition
-              show={open}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="absolute z-50 mt-1.5 max-h-60 w-full overflow-auto rounded-xl bg-white/95 backdrop-blur-xl py-1.5 text-base shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] ring-1 ring-slate-200/80 focus:outline-none sm:text-sm">
-                {options.map((option) => (
-                  <Listbox.Option
-                    key={option.value}
-                    className={({ active }) =>
-                      `relative cursor-default select-none py-2.5 pl-10 pr-4 transition-all duration-200 ease-fluid rounded-lg mx-1.5 my-0.5 ${
-                        active ? 'bg-primary-subtle text-primary-hover font-medium' : 'text-slate-700 hover:text-slate-900'
-                      }`
-                    }
-                    value={option.value}
-                  >
-                    {({ selected, active }) => (
-                      <>
-                        <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-                          {option.label}
-                        </span>
-                        {selected ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? 'text-primary' : 'text-primary'
-                            }`}
-                          >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
-                      </>
-                    )}
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </Transition>
-          </div>
+    <div className="relative w-full" ref={containerRef}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className={`${className} flex justify-between items-center select-none cursor-pointer`}
+      >
+        <span className="truncate">{displayLabel}</span>
+        <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform flex-shrink-0 ml-2 ${isOpen ? 'rotate-180' : ''}`} />
+      </div>
+      
+      {isOpen && (
+        <div className="absolute z-[100] w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] overflow-hidden max-h-60 overflow-y-auto">
+          <ul className="py-1">
+            {options.map((opt, idx) => {
+              const val = opt.value || opt;
+              const label = opt.label || opt.value || opt;
+              const isSelected = val === value;
+              return (
+                <li 
+                  key={idx}
+                  onClick={() => {
+                    onChange({ target: { value: val } });
+                    setIsOpen(false);
+                  }}
+                  className={`px-4 py-2.5 text-sm font-medium cursor-pointer transition-colors ${isSelected ? 'bg-teal-50 text-teal-700' : 'text-slate-700 hover:bg-slate-50 hover:text-teal-600'}`}
+                >
+                  {label}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
-    </Listbox>
+    </div>
   );
 }
