@@ -22,7 +22,9 @@ export function Sidebar({ queueSearchTerm = '' }) {
     for (const rx of prescriptions) {
       if (queueSearchTerm) {
         const search = queueSearchTerm.toLowerCase();
-        if (!rx.nama_pasien?.toLowerCase().includes(search) && !rx.nomor_resep?.toLowerCase().includes(search)) {
+        const rxName = (rx.nama_pasien || rx.pasien || rx.patientName || rx.patient_nama || rx.name || '').toLowerCase();
+        const rxNumber = (rx.nomor_resep || '').toLowerCase();
+        if (!rxName.includes(search) && !rxNumber.includes(search)) {
           continue;
         }
       }

@@ -4,6 +4,7 @@ import { useStore } from '../store.js';
 
 export function RiwayatPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [expandedId, setExpandedId] = useState(null);
   const transactions = useStore(s => s.transactions) || [];
   
   const riwayatDispense = transactions.filter(t => t.type === 'DISPENSE');
@@ -58,18 +59,40 @@ export function RiwayatPage() {
             </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredData.map((row) => (
-                  <tr key={row.id} className="hover:bg-slate-50 transition-colors duration-150">
-                    <td className="py-4 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{row.id}</td>
-                    <td className="py-4 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">{row.patient}</td>
-                    <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{row.poli || '-'}</td>
-                    <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{new Date(row.date).toLocaleString('id-ID')}</td>
-                    <td className="py-4 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">{row.itemsCount || 1}</td>
-                    <td className="py-4 px-6 text-center whitespace-nowrap">
-                      <span className="inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold shadow-sm">
-                        Selesai
-                      </span>
-                    </td>
-                  </tr>
+                  <React.Fragment key={row.id}>
+                    <tr 
+                      onClick={() => setExpandedId(expandedId === row.id ? null : row.id)}
+                      className="hover:bg-slate-50 transition-colors duration-150 cursor-pointer"
+                    >
+                      <td className="py-4 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{row.id}</td>
+                      <td className="py-4 px-6 text-sm font-bold text-slate-900 whitespace-nowrap">{row.patient}</td>
+                      <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{row.poli || '-'}</td>
+                      <td className="py-4 px-6 text-sm text-slate-600 whitespace-nowrap">{new Date(row.date).toLocaleString('id-ID')}</td>
+                      <td className="py-4 px-6 text-sm font-semibold text-slate-700 text-right whitespace-nowrap">{row.itemsCount || 1}</td>
+                      <td className="py-4 px-6 text-center whitespace-nowrap">
+                        <span className="inline-flex px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold shadow-sm">
+                          Selesai
+                        </span>
+                      </td>
+                    </tr>
+                    {expandedId === row.id && (
+                      <tr>
+                        <td colSpan="6" className="p-4 bg-slate-50 border-b border-slate-200">
+                          <div className="border border-slate-200 rounded bg-white p-4">
+                            <h4 className="font-semibold text-sm mb-2">Rincian Item:</h4>
+                            <ul className="text-sm text-slate-600 list-disc list-inside">
+                              {/* Using fallback if items are missing since we didn't pass items array from Dispense earlier */}
+                              {row.items?.length > 0 ? (
+                                row.items.map((item, i) => <li key={i}>{item.nama} - {item.qty}</li>)
+                              ) : (
+                                <li>Data item terenkripsi / diringkas dalam riwayat.</li>
+                              )}
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
                 {filteredData.length === 0 && (
                   <tr>

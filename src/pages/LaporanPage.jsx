@@ -4,12 +4,24 @@ import { toast } from 'sonner';
 import { useStore } from '../store.js';
 
 export function LaporanPage() {
-  const [jenisLaporan, setJenisLaporan] = useState('Laporan Dispensing Harian');
+  const [jenisLaporan, setJenisLaporan] = useState('Dispensing Harian');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
   const transactionHistory = useStore(s => s.transactions) || [];
   
-  const filteredLaporan = transactionHistory.filter(t => t.type === (jenisLaporan === 'Dispensing Harian' ? 'DISPENSE' : 'RESTOCK'));
+  const filteredLaporan = transactionHistory.filter(t => {
+    const isCorrectType = jenisLaporan === 'Stok Masuk' ? t.type === 'RESTOCK' : t.type === 'DISPENSE';
+    if (!isCorrectType) return false;
+    if (!startDate || !endDate) return true;
+    
+    const txDate = new Date(t.date).setHours(0,0,0,0);
+    const start = new Date(startDate).setHours(0,0,0,0);
+    const end = new Date(endDate).setHours(0,0,0,0);
+    
+    return txDate >= start && txDate <= end;
+  });
 
   const exportToCSV = (filename, data) => {
     if (data.length === 0) {
@@ -91,12 +103,22 @@ export function LaporanPage() {
             <div className="flex items-center gap-2">
               <div className="relative">
                 <Calendar className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input type="date" defaultValue="2026-08-30" className="pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                <input 
+                  type="date" 
+                  value={startDate} 
+                  onChange={(e) => setStartDate(e.target.value)} 
+                  className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" 
+                />
               </div>
               <span className="text-slate-400">-</span>
               <div className="relative">
                 <Calendar className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input type="date" defaultValue="2026-08-30" className="pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                <input 
+                  type="date" 
+                  value={endDate} 
+                  onChange={(e) => setEndDate(e.target.value)} 
+                  className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 focus:ring-2 focus:ring-primary focus:border-primary outline-none" 
+                />
               </div>
             </div>
           </div>
@@ -106,7 +128,7 @@ export function LaporanPage() {
             disabled={isGenerating}
             className="flex items-center justify-center gap-2 px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm h-[42px] whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Memproses...</> : <><Download className="w-4 h-4" /> Generate & Export PDF</>}
+            {isGenerating ? <><Loader2 className="w-4 h-4 animate-spin" /> Memproses...</> : <><Download className="w-4 h-4 mr-2" /> Ekspor Data (CSV)</>}
           </button>
         </div>
 
