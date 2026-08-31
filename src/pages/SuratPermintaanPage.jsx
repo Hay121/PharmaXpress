@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { FileText, Search, Send, Clock, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useStore } from '../store.js';
 
 export function SuratPermintaanPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [draft, setDraft] = useState([]);
   
-  const dummyItems = [
-    { id: 'OBT-001', nama: 'Paracetamol 500mg', satuan: 'Tablet', stok: 12 },
-    { id: 'OBT-002', nama: 'Amoxicillin 500mg', satuan: 'Kapsul', stok: 450 },
-    { id: 'OBT-003', nama: 'Omeprazole 20mg', satuan: 'Kapsul', stok: 0 },
-    { id: 'OBT-004', nama: 'Cefadroxil 500mg', satuan: 'Kapsul', stok: 120 },
-    { id: 'OBT-005', nama: 'Ibuprofen 400mg', satuan: 'Tablet', stok: 85 },
-  ];
+  const drugDatabase = useStore(s => s.drugDatabase);
+  const restockDrugs = useStore(s => s.restockDrugs);
+  const filteredItems = drugDatabase.filter(i => i.nama_dagang.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const addToDraft = (item) => {
     if (!draft.find(d => d.id === item.id)) {
@@ -31,15 +28,24 @@ export function SuratPermintaanPage() {
 
   const handleKirim = () => {
     if (draft.length === 0) {
-      toast.error('Draft masih kosong!');
+      toast.error('Keranjang kosong atau jumlah tidak valid!');
       return;
     }
+    
+    // Validate if any qty is 0 or negative
+    const hasInvalidQty = draft.some(item => parseInt(item.qty) <= 0 || isNaN(parseInt(item.qty)));
+    if (hasInvalidQty) {
+      toast.error('Keranjang kosong atau jumlah tidak valid!');
+      return;
+    }
+
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
+      restockDrugs(draft);
       setDraft([]);
-      toast.success('Surat Permintaan (SP) berhasil dikirim ke Gudang Utama');
-    }, 1500);
+      toast.success('Stok berhasil ditambahkan ke Gudang Utama!');
+    }, 1200);
   };
 
   return (
@@ -74,11 +80,11 @@ export function SuratPermintaanPage() {
             </div>
             
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
-              {dummyItems.map(item => (
+              {filteredItems.map(item => (
                 <div key={item.id} className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg border border-transparent hover:border-slate-200 transition-colors group cursor-pointer">
                   <div>
-                    <div className="text-sm font-bold text-slate-900">{item.nama}</div>
-                    <div className="text-xs text-slate-500 mt-0.5">Stok Depo: {item.stok} {item.satuan}</div>
+                    <div className="font-semibold text-slate-800">{item.nama_dagang}</div>
+                    <div className="text-xs text-slate-500 mt-1">Stok saat ini: <span className={`font-bold ${item.stok_saat_ini < 50 ? 'text-rose-500' : 'text-slate-700'}`}>{item.stok_saat_ini}</span> {item.satuan}</div>
                   </div>
                   <button 
                     onClick={() => addToDraft(item)}

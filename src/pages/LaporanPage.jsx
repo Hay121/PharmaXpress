@@ -1,35 +1,38 @@
 import React, { useState } from 'react';
 import { BarChart4, Download, FileText, Calendar, Filter, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useStore } from '../store.js';
 
 export function LaporanPage() {
   const [jenisLaporan, setJenisLaporan] = useState('Laporan Dispensing Harian');
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const transactionHistory = useStore(s => s.transactionHistory);
+  
+  const filteredLaporan = transactionHistory.filter(t => t.type === jenisLaporan);
+
   const exportToCSV = (filename, data) => {
-    const csv = data.map(row => Object.values(row).join(',')).join('\n');
+    if (data.length === 0) {
+      toast.error('Tidak ada data untuk diekspor!');
+      return;
+    }
+    const headers = Object.keys(data[0]).join(',');
+    const csv = [headers, ...data.map(row => Object.values(row).join(','))].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
-    toast.success('Berhasil diunduh!');
+    toast.success('Laporan berhasil diekspor sebagai CSV!');
   };
 
   const handleGenerate = () => {
     setIsGenerating(true);
     setTimeout(() => {
       setIsGenerating(false);
-      exportToCSV(`laporan-${jenisLaporan.replace(/ /g, '-').toLowerCase()}.csv`, dummyLaporan);
+      exportToCSV(`laporan-${jenisLaporan.replace(/ /g, '-').toLowerCase()}.csv`, filteredLaporan);
     }, 1500);
   };
-
-  const dummyLaporan = [
-    { id: 1, tanggal: '2026-08-30', nomor: 'RX-20260830-1045', pasien: 'Budi Santoso', poli: 'IGD', waktu: '12 menit', status: 'Selesai' },
-    { id: 2, tanggal: '2026-08-30', nomor: 'RX-20260830-1046', pasien: 'Sari Wulandari', poli: 'Rawat Jalan', waktu: '8 menit', status: 'Selesai' },
-    { id: 3, tanggal: '2026-08-30', nomor: 'RX-20260830-1047', pasien: 'Andi Setiawan', poli: 'Rawat Inap', waktu: '24 menit', status: 'Selesai' },
-    { id: 4, tanggal: '2026-08-30', nomor: 'RX-20260830-1048', pasien: 'Dewi Lestari', poli: 'Rawat Jalan', waktu: '15 menit', status: 'Selesai' },
-  ];
 
   return (
     <div className="flex-1 p-8 bg-slate-50 overflow-y-auto">
@@ -55,10 +58,8 @@ export function LaporanPage() {
                 onChange={(e) => setJenisLaporan(e.target.value)}
                 className="w-full pl-9 pr-4 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none font-medium cursor-pointer"
               >
-                <option value="Laporan Dispensing Harian">Laporan Dispensing Harian</option>
-                <option value="Laporan Pemakaian Narkotika">Laporan Pemakaian Narkotika & Psikotropika</option>
-                <option value="Laporan SLA (Waktu Tunggu)">Laporan SLA (Waktu Tunggu)</option>
-                <option value="Laporan Obat Fast/Slow Moving">Laporan Obat Fast/Slow Moving</option>
+                <option value="Dispensing Harian">Laporan Dispensing Harian</option>
+                <option value="Stok Masuk">Laporan Stok Masuk (Restock)</option>
               </select>
             </div>
           </div>
@@ -107,7 +108,7 @@ export function LaporanPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {dummyLaporan.map((l) => (
+                {filteredLaporan.map((l) => (
                   <tr key={l.id} className="hover:bg-slate-50 transition-colors duration-150">
                     <td className="py-3 px-6 text-sm text-slate-600 whitespace-nowrap">{l.tanggal}</td>
                     <td className="py-3 px-6 text-sm font-mono font-medium text-slate-800 whitespace-nowrap">{l.nomor}</td>
@@ -121,6 +122,13 @@ export function LaporanPage() {
                     </td>
                   </tr>
                 ))}
+                {filteredLaporan.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="py-8 text-center text-slate-500 font-medium">
+                      Tidak ada data laporan untuk kriteria ini.
+                    </td>
+                  </tr>
+                )}
               </tbody>
           </table>
         </div>

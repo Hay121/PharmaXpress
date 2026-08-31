@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Search, Plus, Download, Filter, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { GLOBAL_DRUG_DATABASE } from '../data/mockDatabase.js';
+import { useStore } from '../store.js';
 
 export function MasterObatPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,10 +9,23 @@ export function MasterObatPage() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   const [searchObat, setSearchObat] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
 
-  const dummyDrugs = GLOBAL_DRUG_DATABASE;
+  const drugDatabase = useStore(s => s.drugDatabase);
+  const addDrug = useStore(s => s.addDrug);
+
+  const [newDrug, setNewDrug] = useState({
+    nama_dagang: '',
+    kategori: 'Antibiotik',
+    stok_saat_ini: 0,
+    satuan: 'Tablet',
+    harga_satuan: 0
+  });
   
-  const filteredObat = dummyDrugs.filter(o => o.nama_dagang.toLowerCase().includes(searchObat.toLowerCase()) || o.kode_obat.toLowerCase().includes(searchObat.toLowerCase()));
+  const filteredObat = drugDatabase.filter(o => 
+    (o.nama_dagang.toLowerCase().includes(searchObat.toLowerCase()) || o.kode_obat?.toLowerCase().includes(searchObat.toLowerCase())) &&
+    (filterCategory ? o.kategori === filterCategory : true)
+  );
 
   const exportToCSV = (filename, data) => {
     const csv = data.map(row => Object.values(row).join(',')).join('\n');
@@ -148,30 +161,55 @@ export function MasterObatPage() {
               <div className="p-6 space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Nama Obat</label>
-                  <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Masukkan nama..." />
+                  <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Masukkan nama..." 
+                    value={newDrug.nama_dagang} onChange={e => setNewDrug({...newDrug, nama_dagang: e.target.value})} />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
-                  <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white">
+                  <select className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none bg-white"
+                    value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
                     <option>Antibiotik</option>
                     <option>Analgesik</option>
+                    <option>Antasida</option>
+                    <option>Antihipertensi</option>
                     <option>Vitamin</option>
                   </select>
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Stok Awal</label>
-                    <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" defaultValue={0} />
+                    <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" 
+                      value={newDrug.stok_saat_ini} onChange={e => setNewDrug({...newDrug, stok_saat_ini: parseInt(e.target.value) || 0})} />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">Harga Satuan</label>
+                    <input type="number" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" 
+                      value={newDrug.harga_satuan} onChange={e => setNewDrug({...newDrug, harga_satuan: parseInt(e.target.value) || 0})} />
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Satuan</label>
-                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Box/Tablet" />
+                    <input type="text" className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:outline-none" placeholder="Box/Tablet" 
+                      value={newDrug.satuan} onChange={e => setNewDrug({...newDrug, satuan: e.target.value})} />
                   </div>
                 </div>
               </div>
               <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
                 <button onClick={() => setShowAddModal(false)} className="px-4 py-2 font-semibold text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors">Batal</button>
-                <button onClick={() => { setShowAddModal(false); toast.success('Obat berhasil ditambahkan (Mock)'); }} className="px-4 py-2 font-semibold text-white bg-primary hover:bg-teal-700 rounded-lg shadow-sm transition-colors">Simpan Obat</button>
+                <button onClick={() => {
+                  if (!newDrug.nama_dagang) {
+                    toast.error('Nama obat wajib diisi');
+                    return;
+                  }
+                  addDrug({
+                    ...newDrug,
+                    id: 'OBT-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                    kode_obat: 'NEW-' + Math.random().toString(36).substr(2, 4).toUpperCase(),
+                    tanggal_kadaluarsa: '2027-12-31'
+                  });
+                  setShowAddModal(false);
+                  toast.success('Obat berhasil ditambahkan ke Gudang Utama!');
+                  setNewDrug({ nama_dagang: '', kategori: 'Antibiotik', stok_saat_ini: 0, satuan: 'Tablet', harga_satuan: 0 });
+                }} className="px-4 py-2 font-semibold text-white bg-primary hover:bg-teal-700 rounded-lg shadow-sm transition-colors">Simpan Obat</button>
               </div>
             </div>
           </div>
