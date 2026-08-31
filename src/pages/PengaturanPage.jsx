@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Shield, User, Bell, Database, Smartphone } from 'lucide-react';
+import { Settings, Shield, User, Bell, Database, Smartphone, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function PengaturanPage() {
@@ -112,7 +112,58 @@ export function PengaturanPage() {
               </div>
             )}
 
-            {activeTab !== 'keamanan' && (
+            {activeTab === 'akses' && (
+              <div className="space-y-6 animate-in fade-in duration-300">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-900">Manajemen Akses (RBAC)</h2>
+                    <p className="text-sm text-slate-500 mt-1">Atur peran pengguna dan kendali hak akses ke seluruh modul sistem.</p>
+                  </div>
+                  <button className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg shadow-sm hover:bg-teal-700 transition-colors">
+                    + Tambah Peran
+                  </button>
+                </div>
+                <hr className="border-slate-100" />
+                
+                <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <table className="w-full text-left border-collapse bg-white">
+                    <thead className="bg-slate-50 border-b border-slate-200">
+                      <tr>
+                        <th className="py-3 px-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Peran (Role)</th>
+                        <th className="py-3 px-5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Tulis Resep</th>
+                        <th className="py-3 px-5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Dispensing</th>
+                        <th className="py-3 px-5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Ubah Inventori</th>
+                        <th className="py-3 px-5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Laporan</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {[
+                        { role: 'Administrator', desc: 'Akses tak terbatas ke seluruh sistem', perms: [true, true, true, true] },
+                        { role: 'Apoteker', desc: 'Fokus pada dispensing dan inventori', perms: [false, true, true, true] },
+                        { role: 'Dokter', desc: 'Pembuatan resep klinis', perms: [true, false, false, true] },
+                        { role: 'Asisten Apoteker', desc: 'Dukungan dispensing dasar', perms: [false, true, false, false] }
+                      ].map((r, i) => (
+                        <tr key={i} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-4 px-5">
+                            <div className="font-bold text-slate-900">{r.role}</div>
+                            <div className="text-xs text-slate-500 mt-0.5">{r.desc}</div>
+                          </td>
+                          {r.perms.map((p, j) => (
+                            <td key={j} className="py-4 px-5 text-center">
+                              <div className={`inline-flex w-6 h-6 rounded-md shadow-sm items-center justify-center ${p ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-300'}`}>
+                                {p ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                              </div>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {activeTab !== 'keamanan' && activeTab !== 'akses' && (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <Shield className="w-12 h-12 text-slate-300 mb-4" />
                 <h3 className="text-lg font-bold text-slate-900">Tab {tabs.find(t => t.id === activeTab)?.label}</h3>
