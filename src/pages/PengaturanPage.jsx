@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Shield, User, Bell, Key, Database, Smartphone } from 'lucide-react';
+import { Settings, Shield, User, Bell } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function PengaturanPage() {
@@ -21,7 +21,7 @@ export function PengaturanPage() {
   const tabs = [
     { id: 'profil', label: 'Profil Saya', icon: User },
     { id: 'akses', label: 'Manajemen Akses (RBAC)', icon: Shield },
-    { id: 'keamanan', label: 'Keamanan & Sistem', icon: Key },
+    { id: 'keamanan', label: 'Keamanan & Sistem', icon: Settings },
     { id: 'notifikasi', label: 'Notifikasi', icon: Bell },
   ];
 
@@ -52,7 +52,7 @@ export function PengaturanPage() {
                     : 'border-transparent text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-primary' : 'text-slate-400'}`} />
+                <tab.icon className={`w-5 h-5 flex-shrink-0 ${activeTab === tab.id ? 'text-teal-600' : 'text-slate-400'}`} />
                 {tab.label}
               </button>
             ))}

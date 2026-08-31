@@ -27,6 +27,7 @@ import { SuratPermintaanPage } from './pages/SuratPermintaanPage.jsx';
 import { PengaturanPage } from './pages/PengaturanPage.jsx';
 import { RiwayatPage } from './pages/RiwayatPage.jsx';
 import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ListTodo } from 'lucide-react';
 
 export default function App() {
   const currentUser = useStore(s => s.currentUser);
@@ -188,26 +189,32 @@ export default function App() {
               {/* MILESTONE 2: The Core Routing Preservation */}
               <Route path="/antrean" element={
                 <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                  <div className="p-4 border-b border-slate-100 bg-white flex-shrink-0 flex justify-between items-center">
-                    <div className="w-[400px] relative">
-                      <MagnifyingGlassIcon className="w-4 h-4 shrink-0 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                      <input 
-                        id="queue-search-input"
-                        type="text" 
-                        value={queueSearchTerm}
-                        onChange={(e) => setQueueSearchTerm(e.target.value)}
-                        placeholder="Cari antrean (nama pasien, no resep)..." 
-                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
-                      />
-                      <kbd className="absolute right-3 top-1/2 -translate-y-1/2 font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0 pointer-events-none">Ctrl+K</kbd>
+                  <div className="h-16 w-full bg-white border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0">
+                    <div className="flex items-center gap-3">
+                      <ListTodo className="w-6 h-6 text-teal-600" />
+                      <h1 className="text-xl font-bold text-slate-800 capitalize">Antrean Resep</h1>
                     </div>
-                    <div>
-                      {currentUser?.role === 'DOKTER' ? (
-                        <button className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-teal-700 rounded-lg text-sm font-semibold shadow-sm transition-colors" onClick={() => setNewRxFormOpen(true)}>
-                          <PlusIcon className="w-4 h-4 shrink-0" />
-                          Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
-                        </button>
-                      ) : null}
+                    <div className="flex items-center gap-4">
+                      <div className="w-[400px] relative">
+                        <MagnifyingGlassIcon className="w-4 h-4 shrink-0 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <input 
+                          id="queue-search-input"
+                          type="text" 
+                          value={queueSearchTerm}
+                          onChange={(e) => setQueueSearchTerm(e.target.value)}
+                          placeholder="Cari antrean (nama pasien, no resep)..." 
+                          className="appearance-none w-full bg-white border border-slate-300 text-slate-800 rounded-xl pl-10 pr-4 py-2.5 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 font-medium transition-all"
+                        />
+                        <kbd className="absolute right-3 top-1/2 -translate-y-1/2 font-sans text-[11px] px-1.5 py-0.5 bg-white border border-slate-200 rounded text-slate-400 shrink-0 pointer-events-none">Ctrl+K</kbd>
+                      </div>
+                      <div>
+                        {currentUser?.role === 'DOKTER' ? (
+                          <button className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white hover:bg-slate-800 rounded-xl text-sm font-semibold shadow-sm transition-colors h-[42px]" onClick={() => setNewRxFormOpen(true)}>
+                            <PlusIcon className="w-4 h-4 shrink-0" />
+                            Resep Baru <span className="bg-white/20 px-1 rounded text-[10px] ml-1">Alt+N</span>
+                          </button>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                   <div className="flex-1 flex min-h-0 overflow-hidden">
