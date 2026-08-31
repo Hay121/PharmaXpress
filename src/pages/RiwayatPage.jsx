@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArchiveBoxIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon, FaceFrownIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, FaceFrownIcon } from '@heroicons/react/24/outline';
+import { History } from 'lucide-react';
 import { useStore } from '../store.js';
 
 export function RiwayatPage() {
@@ -21,7 +22,7 @@ export function RiwayatPage() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <ArchiveBoxIcon className="w-6 h-6 text-primary" />
+            <History className="w-6 h-6 text-primary" />
             Riwayat Penyerahan
           </h1>
           <p className="text-slate-500 mt-1">Daftar resep yang telah berhasil diproses dan diserahkan ke pasien.</p>
@@ -29,7 +30,7 @@ export function RiwayatPage() {
 
         {/* Action Bar */}
         <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 w-full">
             <MagnifyingGlassIcon className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input 
               type="text" 
@@ -39,9 +40,6 @@ export function RiwayatPage() {
               className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none"
             />
           </div>
-          <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-300 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
-            <AdjustmentsHorizontalIcon className="w-5 h-5" /> Filter
-          </button>
         </div>
 
         {/* Minimalist Data Grid */}
@@ -80,14 +78,14 @@ export function RiwayatPage() {
                         <td colSpan="6" className="p-4 bg-slate-50 border-b border-slate-200">
                           <div className="border border-slate-200 rounded bg-white p-4">
                             <h4 className="font-semibold text-sm mb-2">Rincian Item:</h4>
-                            <ul className="space-y-2 mt-2">
+                            <ul className="space-y-0 mt-2">
                               {row.items?.map((item, idx) => (
-                                <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1.5 flex-shrink-0"></span>
+                                <li key={idx} className="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-2 flex-shrink-0"></div>
                                   <div>
-                                    <span className="font-semibold">{item.nama}</span> 
-                                    <span className="text-slate-500"> — {item.dosis || 'Sesuai resep'} ({item.qty} {item.satuan || 'Item'})</span>
-                                    {item.catatan && <p className="text-xs text-amber-600 mt-0.5">Catatan: {item.catatan}</p>}
+                                    <div className="font-semibold text-slate-800">{item.nama} <span className="text-teal-700 font-medium ml-1">({item.qty} {item.satuan || 'Item'})</span></div>
+                                    <div className="text-sm text-slate-500 mt-0.5">{item.aturanPakai || 'Sesuai instruksi dokter'}</div>
+                                    {item.catatan && <div className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded mt-1">Note: {item.catatan}</div>}
                                   </div>
                                 </li>
                               ))} 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, AlertCircle, ShieldAlert, Search } from 'lucide-react';
+import { ShieldCheck, AlertCircle, ShieldAlert, Search, AlertTriangle } from 'lucide-react';
 import { GLOBAL_DRUG_DATABASE } from '../data/mockDatabase.js';
 
 export function AuditEdPage() {
@@ -41,7 +41,10 @@ export function AuditEdPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Audit Kedaluwarsa (ED)</h1>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <AlertTriangle className="w-6 h-6 text-primary" />
+              Audit Kedaluwarsa
+            </h1>
             <p className="text-slate-500 mt-1">Pemantauan keamanan inventori klinis real-time.</p>
           </div>
           

@@ -166,7 +166,7 @@ export function MasterObatPage() {
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Kategori</label>
                   <div className="relative">
-                    <select className="w-full appearance-none bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all"
+                    <select className="appearance-none w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium"
                       value={newDrug.kategori} onChange={e => setNewDrug({...newDrug, kategori: e.target.value})}>
                       <option>Antibiotik</option>
                       <option>Analgesik</option>
@@ -174,7 +174,7 @@ export function MasterObatPage() {
                       <option>Antihipertensi</option>
                       <option>Vitamin</option>
                     </select>
-                    <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-slate-400 pointer-events-none" />
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -184,8 +184,8 @@ export function MasterObatPage() {
                       value={newDrug.stok_saat_ini} 
                       onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/^0+(?=\d)/, '');
-                        setNewDrug({...newDrug, stok_saat_ini: val === '' ? 0 : parseInt(val)});
+                        let val = e.target.value.replace(/^0+(?=\d)/, '');
+                        setNewDrug({...newDrug, stok_saat_ini: val === '' ? '0' : val});
                       }} 
                     />
                   </div>
@@ -195,8 +195,8 @@ export function MasterObatPage() {
                       value={newDrug.harga_satuan} 
                       onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
                       onChange={(e) => {
-                        const val = e.target.value.replace(/^0+(?=\d)/, '');
-                        setNewDrug({...newDrug, harga_satuan: val === '' ? 0 : parseInt(val)});
+                        let val = e.target.value.replace(/^0+(?=\d)/, '');
+                        setNewDrug({...newDrug, harga_satuan: val === '' ? '0' : val});
                       }} 
                     />
                   </div>

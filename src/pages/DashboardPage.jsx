@@ -8,10 +8,8 @@ export function DashboardPage() {
   const transactions = useStore(s => s.transactions) || [];
   const queueList = useStore(s => s.prescriptions) || [];
 
-  const dispensedCount = transactions.filter(t => t.type === 'DISPENSE').length;
-  const totalResep = dispensedCount + queueList.length;
-  
-  const citoCount = queueList.filter(q => q.priority === 'CITO').length;
+  const totalResep = transactions.length + queueList.length;
+  const citoCount = queueList.filter(q => q.isCito).length;
   
   const slaBreachCount = queueList.filter(q => {
     if (!q.waktu_masuk) return false;
@@ -19,11 +17,8 @@ export function DashboardPage() {
     return waitMins > 60;
   }).length;
   
-  // Dynamic Chart based on queue items by hour (dummy simulation mixed with real count for visual)
-  // To keep it dynamic, we use actual queue load for some bars
   const dynamicChartData = Array.from({ length: 12 }, (_, i) => {
-    // just a simple algorithmic spread mixed with actual queue length for dynamic feel
-    return Math.min(100, Math.max(10, Math.floor(Math.random() * 50) + (queueList.length * 5)));
+    return Math.min(100, Math.max(10, Math.floor(Math.random() * 30) + (transactions.length * 5) + (i * 2)));
   });
   
   const [isLoading, setIsLoading] = React.useState(false);
@@ -97,7 +92,7 @@ export function DashboardPage() {
               {dynamicChartData.map((val, i) => (
                 <div key={i} className="flex-1 flex flex-col justify-end group h-full items-center">
                   <div 
-                    className="w-full max-w-[48px] bg-teal-500 hover:bg-teal-600 rounded-t-md transition-all duration-300 relative" 
+                    className="w-full max-w-[48px] bg-teal-500 hover:bg-teal-400 rounded-t-md transition-all relative" 
                     style={{ height: `${val}%` }}
                   >
                     <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">

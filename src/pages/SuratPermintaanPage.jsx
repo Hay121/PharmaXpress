@@ -133,8 +133,8 @@ export function SuratPermintaanPage() {
                         value={d.qty}
                         onFocus={(e) => String(e.target.value) === '0' && e.target.select()}
                         onChange={(e) => {
-                          const val = e.target.value.replace(/^0+(?=\d)/, '');
-                          updateQty(d.id, val === '' ? 0 : parseInt(val));
+                          let val = e.target.value.replace(/^0+(?=\d)/, '');
+                          updateQty(d.id, val === '' ? '0' : val);
                         }}
                         className="w-20 p-1.5 border border-slate-300 rounded text-sm text-center tabular-nums outline-none focus:border-primary focus:ring-1 focus:ring-primary" 
                       />

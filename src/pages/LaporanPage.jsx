@@ -86,39 +86,36 @@ export function LaporanPage() {
           <div className="flex-1 space-y-2">
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jenis Laporan</label>
             <div className="relative z-50">
-              <FileText className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <select 
                 value={jenisLaporan}
                 onChange={(e) => setJenisLaporan(e.target.value)}
-                className="w-full appearance-none bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all"
+                className="appearance-none w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium"
               >
                 <option value="Dispensing Harian">Laporan Dispensing Harian</option>
                 <option value="Stok Masuk">Laporan Stok Masuk (Restock)</option>
               </select>
-              <ChevronDown className="absolute right-3 top-3 w-4 h-4 text-slate-400 pointer-events-none" />
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
             </div>
           </div>
 
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Rentang Tanggal</label>
             <div className="flex items-center gap-2">
-              <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <div className="relative w-full">
                 <input 
                   type="date" 
                   value={startDate} 
                   onChange={(e) => setStartDate(e.target.value)} 
-                  className="w-full appearance-none [color-scheme:light] bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all text-sm" 
+                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium" 
                 />
               </div>
               <span className="text-slate-400 font-medium">-</span>
-              <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <div className="relative w-full">
                 <input 
                   type="date" 
                   value={endDate} 
                   onChange={(e) => setEndDate(e.target.value)} 
-                  className="w-full appearance-none [color-scheme:light] bg-white border border-slate-300 text-slate-700 py-2.5 pl-9 pr-4 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer transition-all text-sm" 
+                  className="appearance-none [color-scheme:light] w-full bg-white border border-slate-300 text-slate-700 py-2.5 pl-4 pr-10 rounded-xl shadow-sm hover:border-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-500 transition-all cursor-pointer font-medium" 
                 />
               </div>
             </div>
@@ -137,9 +134,6 @@ export function LaporanPage() {
         <div className="w-full overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm relative z-0">
           <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
             <span className="text-sm font-bold text-slate-700">Preview: {jenisLaporan}</span>
-            <button className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-teal-700">
-              <Filter className="w-3.5 h-3.5" /> Opsi Tabel
-            </button>
           </div>
           <table className="min-w-full table-auto divide-y divide-slate-200">
             <thead className="bg-slate-50 border-b border-slate-200">
