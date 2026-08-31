@@ -83,18 +83,8 @@ export function TopBar() {
     .toUpperCase();
 
   return (
-    <header className="h-16 flex-shrink-0 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-50 sticky top-0">
+    <header className="h-16 flex-1 flex items-center justify-end px-6 bg-white border-b border-slate-200 z-50 flex-shrink-0">
       
-      {/* Left: Brand Context */}
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-teal-500 rounded-lg shadow-sm flex items-center justify-center">
-          <span className="text-white font-bold text-lg leading-none">+</span>
-        </div>
-        <div className="text-lg font-bold text-slate-900 tracking-tight">
-          SIMRS Xpress
-        </div>
-      </div>
-
       {/* Right: Shift & Profile */}
       <div className="flex items-center gap-6 whitespace-nowrap flex-shrink-0">
         

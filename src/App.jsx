@@ -187,9 +187,8 @@ export default function App() {
               {/* MILESTONE 2: The Core Routing Preservation */}
               <Route path="/antrean" element={
                 <div className="flex-1 flex flex-col overflow-hidden w-full h-full">
-                  {/* Secondary Action Bar */}
-                  <div className="h-14 bg-slate-50 border-b flex items-center justify-between px-6 shrink-0">
-                    <div className="w-96 relative">
+                  <div className="h-14 w-full bg-slate-50 border-b border-slate-200 flex items-center justify-between px-6 flex-shrink-0">
+                    <div className="w-[400px] relative">
                       <button className="flex items-center gap-2 w-full px-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-500 text-sm hover:bg-slate-50 hover:text-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-teal-500" onClick={() => setSearchOpen(true)}>
                         <MagnifyingGlassIcon className="w-4 h-4 shrink-0" />
                         <span className="truncate">Cari antrean (nama pasien, no resep)...</span>

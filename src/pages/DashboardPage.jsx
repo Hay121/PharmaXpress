@@ -13,7 +13,7 @@ export function DashboardPage() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      toast.success('Daftar tugas telah disinkronisasi dengan sistem HIS.');
+      toast.success('Memuat daftar tugas lengkap...');
     }, 1500);
   };
 
